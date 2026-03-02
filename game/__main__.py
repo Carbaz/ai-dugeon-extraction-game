@@ -15,7 +15,7 @@ def main():
     _logger.info('STARTING GAME...')
     gameplay_function = get_gameplay_function(GAME_CONFIG)
     interface = get_interface(gameplay_function, UI_CONFIG)
-    interface.launch(inline=False, server_name="0.0.0.0", ssr_mode=False)
+    interface.launch(inline=False, server_name="0.0.0.0")
 
 
 if __name__ == '__main__':
