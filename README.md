@@ -2,7 +2,7 @@
 title: The Neural Nexus
 app_file: app.py
 sdk: gradio
-sdk_version: 5.49.1
+sdk_version: 6.8.0
 license: mit
 emoji: 🧛
 colorFrom: indigo
