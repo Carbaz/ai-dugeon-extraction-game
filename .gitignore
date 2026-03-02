@@ -189,3 +189,6 @@ cython_debug/
 ignoreme/
 ignoreme
 cache/
+
+# Generated Scripts
+**activate-the-one-env.*
