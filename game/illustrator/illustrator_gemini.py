@@ -4,6 +4,7 @@ from io import BytesIO
 
 from dotenv import load_dotenv
 from google import genai  # New Google's SDK 'genai' to replace 'generativeai'.
+from google.genai import types
 from PIL import Image
 
 
@@ -11,7 +12,7 @@ from PIL import Image
 load_dotenv(override=True)
 
 # Define globals.
-MODEL = 'gemini-2.5-flash-image'
+MODEL = 'gemini-2.0-flash'
 
 # Client instantiation.
 CLIENT = genai.Client()
@@ -22,7 +23,10 @@ def draw(prompt, size=(1024, 1024), client=CLIENT, model=MODEL):
     """Generate an image based on the prompt."""
     # Generate image.
     response = client.models.generate_content(
-        model=model, contents=[prompt])
+        model=model,
+        contents=[prompt],
+        config=types.GenerateContentConfig(
+            response_modalities=['IMAGE']))
     # Process response.
     for part in response.candidates[0].content.parts:
         if part.text is not None:
