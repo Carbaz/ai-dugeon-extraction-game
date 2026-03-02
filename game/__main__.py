@@ -9,7 +9,14 @@ from .interface import get_interface
 
 _logger = getLogger(__name__)
 
-if __name__ == '__main__':
+
+def main(*, local: bool = False):
+    """Launch the game. Set local=True for browser auto-open."""
     _logger.info('STARTING GAME...')
     gameplay_function = get_gameplay_function(GAME_CONFIG)
-    get_interface(gameplay_function, UI_CONFIG).launch(inbrowser=True, inline=False)
+    interface = get_interface(gameplay_function, UI_CONFIG)
+    interface.launch(inbrowser=local, inline=False)
+
+
+if __name__ == '__main__':
+    main(local=True)
