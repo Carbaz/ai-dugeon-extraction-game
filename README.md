@@ -1,6 +1,16 @@
-# The Neural Nexus
+---
+title: The Neural Nexus
+app_file: app.py
+sdk: gradio
+sdk_version: 5.49.1
+license: mit
+emoji: 🧛
+colorFrom: indigo
+colorTo: purple
+short_description: A fantasy dungeon extraction game powered by AI.
+---
 
-<!-- ![The horse](images/chair.jpg) -->
+## The Neural Nexus
 
 TODO:
 
