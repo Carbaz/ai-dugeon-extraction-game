@@ -68,8 +68,8 @@ def get_interface(submit_function, config: Interface_Config):
             # Call Storyteller.
             scene, response, history, input = submit_function(message, history)
             _logger.warning(response)
-            # Check game over after.
-            if response.game_over:
+            # Check game over after (response may be a str if an error occurred).
+            if hasattr(response, 'game_over') and response.game_over:
                 _logger.info('GAME OVER AFTER MOVE. LOCKING.')
                 return _game_over(scene, response)
             # Return Storyteller response.
