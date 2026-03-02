@@ -11,7 +11,7 @@ from PIL import Image
 load_dotenv(override=True)
 
 # Define globals.
-MODEL = 'gemini-2.5-flash-image-preview'
+MODEL = 'gemini-2.5-flash-image'
 
 # Client instantiation.
 CLIENT = genai.Client()
