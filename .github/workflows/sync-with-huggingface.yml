@@ -1,0 +1,22 @@
+name: Sync to Hugging Face hub
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  sync-to-hub:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          lfs: true
+      - name: Remove images folder from git and commit
+        run: |
+          git rm -r images || true
+          git commit -am "Remove images folder for Hugging Face Space" || true
+      - name: Push to hub
+        env:
+          HF_TOKEN: ${{ secrets.HF_SYNC_TOKEN }}
+        run: git push --force https://Carbaz:$HF_TOKEN@huggingface.co/spaces/Carbaz/the_neural_nexus main
