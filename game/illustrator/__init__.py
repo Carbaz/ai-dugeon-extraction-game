@@ -6,7 +6,18 @@ from .illustrator_gemini import draw as draw_gemini
 from .illustrator_gpt import draw as draw_gpt
 from .illustrator_grok import draw as draw_grok
 from .illustrator_grok import draw_x as draw_grok_x
+from .illustrator_pixazo import draw as draw_pixazo
 
 
 __all__ = ['draw_dalle_2', 'draw_dalle_3', 'draw_gemini',
-           'draw_gpt', 'draw_grok', 'draw_grok_x']
+           'draw_gpt', 'draw_grok', 'draw_grok_x', 'draw_pixazo']
+
+draw_functions = {
+    'dalle_2': draw_dalle_2,
+    'dalle_3': draw_dalle_3,
+    'gemini': draw_gemini,
+    'gpt': draw_gpt,
+    'grok': draw_grok,
+    'grok_x': draw_grok_x,
+    'pixazo': draw_pixazo
+}

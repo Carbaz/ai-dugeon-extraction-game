@@ -1,12 +1,12 @@
 """AI Mastered Dungeon Extraction Game Configuration module."""
 
 from logging import getLogger
+import os
 
 from dotenv import load_dotenv
 
 from .gameplay import Gameplay_Config
-from .illustrator import draw_dalle_2, draw_dalle_3, draw_gemini, draw_gpt, draw_grok
-from .illustrator import draw_grok_x
+from .illustrator import draw_functions
 from .interface import Interface_Config
 from .storyteller import narrate, set_description_limit
 
@@ -17,7 +17,7 @@ load_dotenv(override=True)
 
 # Choose draw function.
 #   Choose one from the imported ones up there or set to None to disable images.
-DRAW_FUNCTION = draw_gemini
+DRAW_FUNCTION = draw_functions.get(os.getenv('DRAW_FUNCTION', 'pixazo'))
 
 # Define a sample scene description for testing purposes.
 SAMPLE_SCENE = '''A shadow-drenched chamber lies buried deep within the bowels of an
@@ -41,7 +41,8 @@ directly with your mind. Not to simulate reality, but to generate it.
 The Nexus does not load worlds. It listens.
 
 If you choose to sit, the Nexus will initiate full neural synchronization.
-Your thoughts will become terrain. Your instincts, adversaries.
+Your thoughts will become terrain.
+Your instincts, adversaries.
 Your imagination, the architect.
 
 Once the link is active, you must describe the nature of the challenge you wish to face.
@@ -51,18 +52,18 @@ Speak it aloud or think it clearly. The Nexus will listen.
 🜁 When you're ready, take your seat. The system awaits your signal...'''
 
 # Define an image prompt, mind that Grok or Dalle·2 models have a 1024 characters limit.
-SCENE_PROMPT = '''Render a detailed image of the following scene:
+SCENE_PROMPT = '''Render a detailed illustration of the following scene:
 
 """{scene_description}"""
 
 Stay strictly faithful to the description, no added elements, characters, doors, or text.
 Do not depict the adventurer; show only what they see.
 
-Use the "{scene_style}" visual style.
+Use a "{scene_style}" visual style.
 '''
 
 # Define the scene drawing style, can be a simple word or a short sentence.
-SCENE_STYLE = 'Photorealistic'
+SCENE_STYLE = 'Colorful Cinematic and Photorealistic'
 
 # Set a Storyteller scene descriptions size limit to keep the draw prompt in range.
 STORYTELLER_LIMIT = 730
