@@ -16,6 +16,8 @@ def main():
     gameplay_function = get_gameplay_function(GAME_CONFIG)
     interface = get_interface(gameplay_function, UI_CONFIG)
     interface.launch()
+    # We return the app instance for potential use in autoreload scenarios.
+    return interface
 
 
 if __name__ == '__main__':
