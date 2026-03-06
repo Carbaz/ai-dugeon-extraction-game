@@ -14,7 +14,7 @@ from .tools import handle_tool_call, tools
 load_dotenv(override=True)
 
 # Define globals.
-MODEL = 'gpt-4o-mini'
+MODEL = 'gpt-5-mini'
 
 # Client instantiation.
 CLIENT = OpenAI()
