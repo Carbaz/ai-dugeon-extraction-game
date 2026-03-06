@@ -36,7 +36,7 @@ def get_interface(submit_function, config: Interface_Config):
         # Scene's description.
         description_box = gr.Textbox(
             label=config.description_label, value=config.start_scene,
-            interactive=False, show_copy_button=True)
+            interactive=False, buttons=["copy"])
         # Player's command.
         user_input = gr.Textbox(
             label=config.input_label, placeholder=config.input_command)
