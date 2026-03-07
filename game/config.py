@@ -184,6 +184,7 @@ GAME_CONFIG = Gameplay_Config(
 # Configure the interface.
 UI_CONFIG = Interface_Config(
     start_img='images/chair.jpg',
+    start_ambience='audios/intro_ambience.mp3',
     place_img='images/machine.jpg',
     description_label='Cognitive Projection',
     title_label='The Neural Nexus',

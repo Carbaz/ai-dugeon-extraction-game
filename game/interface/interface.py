@@ -10,6 +10,7 @@ from logging import getLogger
 class Interface_Config(NamedTuple):
     """Gradio interface configuration class."""
     start_img: str
+    start_ambience: str
     place_img: str
     description_label: str
     title_label: str
@@ -30,25 +31,26 @@ def get_interface(submit_function, config: Interface_Config):
         # Hidden state for history.
         history_state = gr.State([])
         # Scene's image.
-        scene_image = gr.Image(
-            label="Scene", value=config.start_img, placeholder=config.place_img,
-            type="pil", show_label=False)
-        # Audio playback component.
-        ambience_audio = gr.Audio(
-            label="Ambience",
-            # type="filepath",
-            interactive=False,
-            container=False,
-            autoplay=True,
-            format="mp3",
-            visible=False)
+        scene_image = gr.Image(value=config.start_img, placeholder=config.place_img,
+                               label="Scene", type="pil", show_label=False)
+        # Scene's ambience.
+        # ambience_audio = None
+        ambience_audio = gr.Audio(label="Ambience", show_label=False,
+                                  value=config.start_ambience,
+                                  sources=[],
+                                  interactive=False,
+                                  autoplay=True,
+                                  format="mp3",
+                                  # container=False,
+                                  # type="filepath",
+                                  # visible=False
+                                  )
         # Scene's description.
-        description_box = gr.Textbox(
-            label=config.description_label, value=config.start_scene,
-            interactive=False, buttons=["copy"])
+        description_box = gr.Textbox(label=config.description_label, buttons=["copy"],
+                                     value=config.start_scene, interactive=False)
         # Player's command.
-        user_input = gr.Textbox(
-            label=config.input_label, placeholder=config.input_command)
+        user_input = gr.Textbox(label=config.input_label,
+                                placeholder=config.input_command)
         # Submit button.
         submit_btn = gr.Button(config.input_button)
 
@@ -68,14 +70,11 @@ def get_interface(submit_function, config: Interface_Config):
         def game_over_wrap(message, history, button_label):
             """Check Game over status Before and After Storyteller call."""
             # Check game over before.
-            _logger.info(button_label)
-            _logger.info(config.game_over_label)
             if button_label == config.game_over_label:
                 _logger.warning('GAME OVER STATUS. RESTARTING...')
                 return _reset_game()
             # Call Storyteller.
             scene, ambience, response, history, input = submit_function(message, history)
-            _logger.warning(response)
             # Check game over after (response may be a str if an error occurred).
             if hasattr(response, 'game_over') and response.game_over:
                 _logger.info('GAME OVER AFTER MOVE. LOCKING.')
@@ -84,17 +83,15 @@ def get_interface(submit_function, config: Interface_Config):
             return scene, ambience, response, history, input, gr.update(), gr.update()
 
         # Assign function to button click event.
-        submit_btn.click(
-            fn=game_over_wrap, api_visibility="private",
-            inputs=[user_input, history_state, submit_btn],
-            outputs=[scene_image, ambience_audio, description_box, history_state,
-                     user_input, user_input, submit_btn])
+        submit_btn.click(fn=game_over_wrap, api_visibility="private",
+                         inputs=[user_input, history_state, submit_btn],
+                         outputs=[scene_image, ambience_audio, description_box,
+                                  history_state, user_input, user_input, submit_btn])
         # Assign function to input submit event. (Press enter)
-        user_input.submit(
-            fn=game_over_wrap, api_visibility="private",
-            inputs=[user_input, history_state, submit_btn],
-            outputs=[scene_image, ambience_audio, description_box, history_state,
-                     user_input, user_input, submit_btn])
+        user_input.submit(fn=game_over_wrap, api_visibility="private",
+                          inputs=[user_input, history_state, submit_btn],
+                          outputs=[scene_image, ambience_audio, description_box,
+                                   history_state, user_input, user_input, submit_btn])
     return ui
 
 
