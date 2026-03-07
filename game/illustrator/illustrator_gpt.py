@@ -2,11 +2,15 @@
 
 import base64
 from io import BytesIO
+from logging import getLogger
 
 from dotenv import load_dotenv
 from openai import OpenAI
 from PIL import Image
 
+
+# Instantiate logger.
+_logger = getLogger(__name__)
 
 # Environment initialization.
 load_dotenv(override=True)
@@ -14,6 +18,7 @@ load_dotenv(override=True)
 # Define global defaults.
 MODEL = 'gpt-image-1'
 QUALITY = 'low'
+_logger.info(f'ILLUSTRATOR MODEL: {MODEL} WITH QUALITY: {QUALITY}')
 
 # Client instantiation.
 CLIENT = OpenAI()

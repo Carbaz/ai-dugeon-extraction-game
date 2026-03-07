@@ -1,5 +1,6 @@
 """AI Mastered Dungeon Extraction Game Storyteller using OpenAI's GPT."""
 
+from logging import getLogger
 from typing import List
 
 from annotated_types import MaxLen
@@ -10,11 +11,15 @@ from pydantic import BaseModel, Field
 from .tools import handle_tool_call, tools
 
 
+# Instantiate logger.
+_logger = getLogger(__name__)
+
 # Environment initialization.
 load_dotenv(override=True)
 
 # Define globals.
 MODEL = 'gpt-5-mini'
+_logger.info(f'STORYTELLER MODEL: {MODEL}')
 
 # Client instantiation.
 CLIENT = OpenAI()

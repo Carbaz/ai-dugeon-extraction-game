@@ -1,17 +1,22 @@
 """AI Mastered Dungeon Extraction Game scenes illustrator using Google's Gemini."""
 
 from io import BytesIO
+from logging import getLogger
 
 from dotenv import load_dotenv
 from google import genai  # New Google's SDK 'genai' to replace 'generativeai'.
 from PIL import Image
 
 
+# Instantiate logger.
+_logger = getLogger(__name__)
+
 # Environment initialization.
 load_dotenv(override=True)
 
 # Define globals.
 MODEL = 'gemini-2.5-flash-image'
+_logger.info(f'ILLUSTRATOR MODEL: {MODEL}')
 
 # Client instantiation.
 CLIENT = genai.Client()
@@ -26,7 +31,7 @@ def draw(prompt, size=(1024, 1024), client=CLIENT, model=MODEL):
     # Process response.
     for part in response.candidates[0].content.parts:
         if part.text is not None:
-            print(part.text)
+            _logger.info(part.text)
         elif part.inline_data is not None:
             image_data = part.inline_data.data
     # Open the generated image.

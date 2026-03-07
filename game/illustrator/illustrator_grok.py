@@ -3,6 +3,7 @@
 import base64
 import os
 from io import BytesIO
+from logging import getLogger
 
 from dotenv import load_dotenv
 from openai import OpenAI
@@ -10,12 +11,16 @@ from PIL import Image
 from xai_sdk import Client
 
 
+# Instantiate logger.
+_logger = getLogger(__name__)
+
 # Environment initialization.
 load_dotenv(override=True)
 
 # Define global defaults.
 MODEL = 'grok-2-image'
 QUALITY = None
+_logger.info(f'ILLUSTRATOR MODEL: {MODEL} WITH QUALITY: {QUALITY}')
 
 # Client instantiation.
 XAI_API_KEY = os.getenv('XAI_API_KEY')

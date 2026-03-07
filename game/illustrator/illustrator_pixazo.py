@@ -1,12 +1,16 @@
 """AI Mastered Dungeon Extraction Game scenes illustrator using Pixazo."""
 
 import os
+from logging import getLogger
 
 import requests
 from dotenv import load_dotenv
 
 from .tools import fetch_image
 
+
+# Instantiate logger.
+_logger = getLogger(__name__)
 
 # Environment initialization.
 load_dotenv(override=True)
@@ -17,6 +21,7 @@ PIXAZO_API_KEY = os.getenv('PIXAZO_API_KEY')
 # Choose model to use, comment out the others:
 # PIXAZO_MODEL = "getImage/v1/getSDXLImage"  # Stable Diffusion XL.
 PIXAZO_MODEL = "flux-1-schnell/v1/getData"  # Flux.
+_logger.info(f'ILLUSTRATOR MODEL: {PIXAZO_MODEL}')
 
 PIXAZO_API_URL = f"{PIXAZO_URL}/{PIXAZO_MODEL}"
 
@@ -53,7 +58,7 @@ def draw(prompt, negative=NEGATIVE_PROMPT, size=(1024, 1024)):
     response = requests.post(PIXAZO_API_URL, headers=HEADERS, json=data, timeout=30)
     response.raise_for_status()
     response_data = response.json()
-    print(f'MESSAGE: {response_data}')
+    _logger.info(f'MESSAGE: {response_data}')
     # Extract the image URL from the response.
     image_url = get_url(response_data)
     # Fetch the image from the URL and return.
