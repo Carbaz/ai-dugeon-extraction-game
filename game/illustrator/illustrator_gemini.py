@@ -31,6 +31,5 @@ def draw(prompt, size=(1024, 1024), client=CLIENT, model=MODEL):
             image_data = part.inline_data.data
     # Open the generated image.
     generated_image = Image.open(BytesIO(image_data))
-    # Resize the image to the specified dimensions.
-    resized_image = generated_image.resize(size)
-    return resized_image
+    # Resize the image to the specified dimensions and return.
+    return generated_image.resize(size)
