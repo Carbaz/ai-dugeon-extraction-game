@@ -35,7 +35,7 @@ def get_gameplay_function(config: Gameplay_Config):
             scene = config.error_img
             response = config.error_narrator.format(ex=ex)
             _logger.error(f'ERROR NARRATING SCENE: {ex}\n{message}\n{history}')
-            return scene, response, history, message
+            return scene, None, response, history, message
         # Update history.
         history.append({"role": "user", "content": message})
         history.append({"role": "assistant", "content": response.model_dump_json()})
@@ -53,11 +53,27 @@ def get_gameplay_function(config: Gameplay_Config):
                 scene = config.error_img
                 response = config.error_illustrator.format(ex=ex)
                 _logger.warning(f'ERROR DRAWING SCENE: {ex}')
-                return scene, response, history, ''
+                return scene, None, response, history, ''
         else:
             _logger.info(f'DRAWING DISABLED...')
             scene = config.disable_img
-        return scene, response, history, ''
+        # Compose ambience.
+        if config.compose_func:
+            _logger.info(f'COMPOSING SCENE...')
+            try:
+                compose_data = {'scene_description': response.scene_description,
+                                'compose_style': config.compose_style}
+                compose_prompt = config.compose_prompt.format(**compose_data)
+                _logger.info(f'COMPOSE PROMPT BODY IS: \n\n{compose_prompt}\n')
+                _logger.info(f'COMPOSE PROMPT LENGTH IS: {len(compose_prompt)}')
+                ambience = config.compose_func(compose_prompt)
+            except Exception as ex:
+                ambience = None
+                _logger.warning(f'ERROR COMPOSING SCENE: {ex}')
+        else:
+            _logger.info(f'COMPOSING DISABLED...')
+            ambience = None
+        return scene, ambience, response, history, ''
     return gameplay_function
 
 
