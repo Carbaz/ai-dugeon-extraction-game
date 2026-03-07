@@ -18,6 +18,7 @@ class Gameplay_Config(NamedTuple):
     disable_img: str
     error_img: str
     error_narrator: str
+    error_composer: str
     error_illustrator: str
 
 

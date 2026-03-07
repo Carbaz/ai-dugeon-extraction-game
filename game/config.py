@@ -178,6 +178,7 @@ GAME_CONFIG = Gameplay_Config(
     disable_img='images/disabled.jpg',
     error_img='images/machine.jpg',
     error_narrator='NEURAL SINAPSIS ERROR\n\n{ex}\n\nEND OF LINE\n\nRE-SUBMIT_',
+    error_composer='NEURAL PERCEPTION ERROR\n\n{ex}\n\nEND OF LINE\n\nRE-SUBMIT_',
     error_illustrator='NEURAL PROJECTION ERROR\n\n{ex}\n\nEND OF LINE\n\nRE-SUBMIT_',)
 
 # Configure the interface.
