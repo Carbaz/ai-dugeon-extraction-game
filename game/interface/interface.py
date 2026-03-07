@@ -44,7 +44,6 @@ def get_interface(submit_function, config: Interface_Config):
         submit_btn = gr.Button(config.input_button)
 
         # Define Game Over control.
-
         def _reset_game():
             """Return Initial values for game restart."""
             return (config.start_img, config.start_scene, [], '',
@@ -77,17 +76,16 @@ def get_interface(submit_function, config: Interface_Config):
 
         # Assign function to button click event.
         submit_btn.click(
-            fn=game_over_wrap,
+            fn=game_over_wrap, api_visibility="private",
             inputs=[user_input, history_state, submit_btn],
             outputs=[scene_image, description_box, history_state, user_input,
                      user_input, submit_btn])
         # Assign function to input submit event. (Press enter)
         user_input.submit(
-            fn=game_over_wrap,
+            fn=game_over_wrap, api_visibility="private",
             inputs=[user_input, history_state, submit_btn],
             outputs=[scene_image, description_box, history_state, user_input,
                      user_input, submit_btn])
-
     return ui
 
 

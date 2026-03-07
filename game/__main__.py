@@ -15,7 +15,7 @@ def main():
     _logger.info('STARTING GAME...')
     gameplay_function = get_gameplay_function(GAME_CONFIG)
     interface = get_interface(gameplay_function, UI_CONFIG)
-    interface.launch()
+    interface.launch(footer_links=[])
     # We return the app instance for potential use in autoreload scenarios.
     return interface
 
