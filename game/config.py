@@ -71,9 +71,17 @@ COMPOSE_PROMPT = '''Compose a "{compose_style}" piece that creates ambience for 
 following scene:
 
 """{scene_description}"""
+
+The piece must be perfectly loopable, with seamless transitions from the end back to
+the beginning, ensuring no audible cuts or breaks. Under no circumstances should the
+loop rely on muted or faded sections at the start or end; the transitions must be
+entirely natural, with the melodic and rhythmic flow fully supporting the loop.
+Additionally, there must not be an end crescendo, final note, or any element that
+denotes the conclusion of the piece. The loop reproduction must feel continuous,
+with no noticeable start or end moments.
 '''
 
-COMPOSE_STYLE = "A cinematic style orchestral"
+COMPOSE_STYLE = "A cinematic and immersive style orchestral"
 
 # Set a Storyteller scene descriptions size limit to keep the draw prompt in range.
 STORYTELLER_LIMIT = 700

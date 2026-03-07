@@ -36,16 +36,11 @@ def get_interface(submit_function, config: Interface_Config):
                                label="Scene", type="pil", show_label=False)
         # Scene's ambience.
         # ambience_audio = None
-        ambience_audio = gr.Audio(label="Ambience", show_label=False,
-                                  value=config.start_ambience,
-                                  sources=[],
-                                  interactive=False,
-                                  autoplay=True,
-                                  format="mp3",
-                                  # container=False,
-                                  # type="filepath",
-                                  # visible=False
-                                  )
+        ambience_audio = gr.Audio(label="Ambience", show_label=False, sources=[],
+                                  loop=True, interactive=False, autoplay=True,
+                                  value=config.start_ambience, format="mp3",
+                                  waveform_options={"waveform_progress_color":
+                                                    "#3571C0"})
         # Scene's description.
         description_box = gr.Textbox(label=config.description_label, buttons=["copy"],
                                      value=config.start_scene, interactive=False)

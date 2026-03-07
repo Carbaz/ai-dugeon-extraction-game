@@ -98,10 +98,25 @@ def compose(prompt):
 def play_on_jupyter(composition):
     """Play the composition in a Jupyter notebook."""
     from IPython.display import Audio
-    audio_file = fetch_composition(compose(composition))
+    print(f"Generating {composition}...")
+    print(f"Generated at: {(composition_url := compose(composition))}")
+    audio_file = fetch_composition(composition_url)
     return Audio(audio_file.read(), autoplay=True)
 
 
-test_prompt = """
-A cinematic Hans Zimmer style orchestral piece, building tension with heavy percussion
-and brass, epic atmosphere"""
+test_style = """
+blend of epic orchestral elements, featuring dramatic percussion,
+sweeping strings, and powerful brass, designed to evoke tension and grandeur"""
+
+test_prompt = f"""
+A cinematic {test_style} style atmosphere.
+The composition should feature heavy percussion, powerful brass, and sweeping strings,
+building tension and grandeur.
+The piece must be perfectly loopable, with seamless transitions from the end back to
+the beginning, ensuring no audible cuts or breaks. Under no circumstances should the
+loop rely on muted or faded sections at the start or end; the transitions must be
+entirely natural, with the melodic and rhythmic flow fully supporting the loop.
+Additionally, there must not be an end crescendo, final note, or any element that
+denotes the conclusion of the piece. The loop reproduction must feel continuous,
+with no noticeable start or end moments.
+"""
