@@ -12,14 +12,31 @@ short_description: A fantasy dungeon extraction game powered by AI.
 
 ## The Neural Nexus
 
+### Latest Updates
+
+* **Parallelized Scene Generation**
+  * The game now parallelizes the illustration and composition processes,
+    significantly reducing the time required to generate scenes. This ensures a
+    smoother and faster gameplay experience.
+
+* **Enhanced Music Looping**
+  * The music generation prompt has been updated to ensure perfectly loopable
+    tracks with no audible transitions, crescendos, or muted sections. The
+    transitions are entirely natural, creating a seamless audio experience.
+
+* **Flexible Style Descriptions**
+  * The test style for music generation has been redefined to focus on
+    orchestral elements without referencing specific composer names, making it
+    more adaptable to various scenarios.
+
 ### TODO
 
-* Set boundaries for user inputs.
-* Add sounds to the scenes.
-* Add voice acting for the Game Master's descriptions.
-* Add voice input.
-* Use video for the final scene: escape or death.
-* Generate a score based on total treasures, experience gained, and depth reached.
+* [ ] Set boundaries for user inputs.
+* [x] Add sounds to the scenes.
+* [ ] Add voice acting for the Game Master's descriptions.
+* [ ] Add voice input.
+* [ ] Use video for the final scene: escape or death.
+* [ ] Generate a score based on total treasures, experience gained, and depth reached.
 
 ### Dependencies
 
@@ -70,6 +87,13 @@ have additional dependencies:
 * `illustrator_subnp`: *(Set as default)*
 
   Uses SSE for real-time progress updates. Fully free, no API key required.
+
+At the moment there is only one variant for audio composition:
+
+* `composer`: *(Based on Pixazo)*
+
+  The composer component generates seamless, loopable audio tracks for an immersive
+  gaming experience. It uses the Pixazo's Track v1.0 Model for audio composition.
 
 #### Installing Dependencies
 
@@ -133,7 +157,8 @@ The following environment variables are used to configure the game:
   * `XAI_API_KEY`: Required if Grok's illustrator is used.
     *(Less prude, faster and portrait mode)*
   * `GOOGLE_API_KEY` Required if Gemini's illustrator is used.
-  * `PIXAZO_API_KEY` Required if Pixazo's illustrator is used. *(Free tier)*
+  * `PIXAZO_API_KEY` Required if Pixazo's Audio gen is used. *(Free tier)*
+    *(Also used by Pixazo's illustrator)*
 
   Obviously the used services must have been topped up with a small amount to generate
   the responses and the images.\
@@ -147,6 +172,12 @@ Several game values can be set in the `config.py` file.
   (e.g., "Colorful Cinematic and Photorealistic").
 * `STORYTELLER_LIMIT`: Limits the size of scene descriptions to ensure compatibility
   with image generation models.
+* `COMPOSE_PROMPT`: Defines the structure and requirements for generating
+    perfectly loopable audio tracks. The prompt ensures seamless transitions
+    with no audible cuts, crescendos, or muted sections, creating a continuous
+    and immersive audio experience.
+* `COMPOSE_STYLE`: Specifies the musical style for audio composition. The
+    default is "A cinematic and immersive style orchestral."
 
 ### Game Launch
 
