@@ -5,7 +5,7 @@ import os
 import requests
 from dotenv import load_dotenv
 
-from tools import fetch_image
+from .tools import fetch_image
 
 
 # Environment initialization.

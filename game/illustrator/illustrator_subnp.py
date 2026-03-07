@@ -4,7 +4,7 @@ from json import loads
 
 import requests
 
-from tools import fetch_image
+from .tools import fetch_image
 
 
 SUBNP_API_URL = "https://t2i.mcpcore.xyz/generate"
