@@ -1,4 +1,4 @@
-"""AI Mastered Dungeon Extraction Game scenes illustrator using Pixazo."""
+"""AI Mastered Dungeon Extraction Game ambience composer using Pixazo."""
 
 import os
 import time
@@ -90,7 +90,7 @@ def compose(prompt):
     # Retrieve the composition_url, waiting if necessary.
     composition_url = get_composition_url(task_id)
     # Fetch the composition from the URL and return.
-    return fetch_composition(composition_url)
+    return composition_url
 
 
 # ## ######################################################
@@ -98,7 +98,7 @@ def compose(prompt):
 def play_on_jupyter(composition):
     """Play the composition in a Jupyter notebook."""
     from IPython.display import Audio
-    audio_file = compose(composition)
+    audio_file = fetch_composition(compose(composition))
     return Audio(audio_file.read(), autoplay=True)
 
 
