@@ -58,7 +58,7 @@ def draw(prompt, negative=NEGATIVE_PROMPT, size=(1024, 1024)):
     response = requests.post(PIXAZO_API_URL, headers=HEADERS, json=data, timeout=30)
     response.raise_for_status()
     response_data = response.json()
-    _logger.info(f'MESSAGE: {response_data}')
+    _logger.info(f'IMAGE RESULT: {response_data}')
     # Extract the image URL from the response.
     image_url = get_url(response_data)
     # Fetch the image from the URL and return.
