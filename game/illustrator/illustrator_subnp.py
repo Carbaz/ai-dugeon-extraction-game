@@ -33,7 +33,7 @@ def handle_stream(response):
             message = loads(line)
             # Handle different statuses.
             if "imageUrl" in message:
-                _logger.info("Image URL:", message["imageUrl"])
+                _logger.info(f"Image URL: {message['imageUrl']}")
                 return message["imageUrl"]
             elif message.get("status") == "processing":
                 _logger.info(f"... {message.get('message')}")
