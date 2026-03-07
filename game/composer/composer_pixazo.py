@@ -98,7 +98,7 @@ def compose(prompt):
 def play_on_jupyter(composition):
     """Play the composition in a Jupyter notebook."""
     from IPython.display import Audio
-    print(f"Generating {composition}...")
+    print(f"Generating composition for: {composition}...")
     print(f"Generated at: {(composition_url := compose(composition))}")
     audio_file = fetch_composition(composition_url)
     return Audio(audio_file.read(), autoplay=True)

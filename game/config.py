@@ -5,7 +5,7 @@ from logging import getLogger
 
 from dotenv import load_dotenv
 
-from .composer import compose
+from .composer import compose_pixazo
 from .gameplay import Gameplay_Config
 from .illustrator import draw_functions
 from .interface import Interface_Config
@@ -176,7 +176,7 @@ You will use a turn-based system where the player and enemies take turns acting.
 # Configure the game.
 GAME_CONFIG = Gameplay_Config(
     draw_func=DRAW_FUNCTION,
-    compose_func=compose,
+    compose_func=compose_pixazo,
     narrate_func=narrate,
     scene_style=SCENE_STYLE,
     scene_prompt=SCENE_PROMPT,
