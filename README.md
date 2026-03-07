@@ -12,109 +12,170 @@ short_description: A fantasy dungeon extraction game powered by AI.
 
 ## The Neural Nexus
 
-TODO:
+### TODO
 
-* Set boundaries to user inputs.
-* Add sounds to the scene
-* Add voice acting for the Game master's descriptions.
+* Set boundaries for user inputs.
+* Add sounds to the scenes.
+* Add voice acting for the Game Master's descriptions.
 * Add voice input.
 * Use video for the final scene: escape or death.
-* Generate a score based on total treasures, exp gained and deep reached.
+* Generate a score based on total treasures, experience gained, and depth reached.
 
-## Requirements
+### Dependencies
 
-AI services access configuration:
+There are 8 variant implementations for the illustrator component, some of which may
+have additional dependencies:
 
-* A `.env` file with the credentials required to access the different LLMs is required:
+* `illustrator_dalle_2`:
 
-  * `OPENAI_API_KEY`: Required always as it's used by the *"storyteller"*.
-  * `XAI_API_KEY`: Required if Grok's illustrator is used.
-    *(Less prude, faster and portrait mode)*
-  * `GOOGLE_API_KEY` Required if Gemini's illustrator is used.
-
-  Obviously the used services must have been topped up with a small amount to generate
-  the responses and the images.\
-  *Refer to each service's current billing information.*
-
-There are 6 variant implementations for the illustrator component, some of them may have
-additional dependencies:
-
-* `illustrator_dalle_2`: *(Set as default)*
-
-  The Dall·E 2 implementation uses standard OpenAI client and should work out of the box.
-  Although Dall·E has proven to be a bit prude and rejects to draw some combat scenes.
+  The Dall·E 2 implementation uses the standard OpenAI client and should work out of
+  the box. Although Dall·E has proven to be a bit prude and rejects drawing some
+  combat scenes.
 
 * `illustrator_dalle_3`:
 
-  The Dall·E 3 implementation uses standard OpenAI client and should work out of the box.
-  Although Dall·E has proven to be a bit prude and rejects to draw some combat scenes.
-  This version gives noticeable better images than Dall·E 2 but at an increased cost
+  The Dall·E 3 implementation uses the standard OpenAI client and should work out of
+  the box. This version provides noticeably better images than Dall·E 2 but at an
+  increased cost.
 
 * `illustrator_grok`:
 
-  The Grok 2 Image implementation uses standard OpenAI client and should work out of the
-  box.
-  It's faster but does not support quality or size controls.
+  The Grok 2 Image implementation uses the standard OpenAI client and should work out
+  of the box. It's faster but does not support quality or size controls.
 
-  Images are generated in a *portrait mode*, so it fits specially well on mobiles.
+  Images are generated in a *portrait mode*, so it fits especially well on mobiles.
 
   Grok is much less prude with violence and may draw combat scenes, at least against
   fantasy enemies, and blood.
 
 * `illustrator_gpt`:
 
-  The GPT Image illustrator uses standard OpenAI client, should work out of the box but
-  it requires the user to be verified on OpenAI platform to have access to it.
+  The GPT-based illustrator uses standard OpenAI client, should work out of the box but
+  it requires the user to be verified on the OpenAI platform to have access to it.
 
-* `illustrator_gemini`
+* `illustrator_gemini`:
 
   The Gemini illustrator uses the new Google SDK, `genai`, which replaces the old one
-  used on the course, `generativeai`, this new one can be installed with:
+  used on the course, `generativeai`
+  *Both `generativeai` and `genai` can be installed simultaneously without issues.*
 
-  `python -m pip install google-genai`
+* `illustrator_grok_x`:
 
-  *Both `generativeai` and `genai` can be installed at the same time without problems*
+  The Grok X implementation requires the `xai-sdk` package.
 
-* `illustrator_grok_x`
+* `illustrator_pixazo`:
 
-  The Grok_X illustrator uses the xAI SDK, `xai-sdk`, this can be installed with:
+  Allows for additional configuration for negative prompts and URL handling. Free tier.
 
-  `python -m pip install xai-sdk`
+* `illustrator_subnp`: *(Set as default)*
 
-## Configuring the service and game
+  Uses SSE for real-time progress updates. Fully free, no API key required.
 
-All services and game values can be set at `config.py` file.
+#### Installing Dependencies
 
-Setting the `DRAW_FUNCTION` to `None` will disable the image generation and a fixed
-image will be used.
+To install the required dependencies for the project, use `pipenv`. Pipenv is a tool
+that manages Python dependencies and virtual environments. Follow these steps:
 
-## Game launch
+1. Ensure `pipenv` is installed. If not, install it using:
 
-The game can be launch from terminal, just navigate to game's root folder
+   ```bash
+   python -m pip install pipenv
+   ```
 
-* `cd community-contributions\dungeon_extraction_game`
+2. Navigate to the project's root directory:
 
-and run the following command:
+   ```bash
+   cd path/to/ai-dungeon-extraction-game
+   ```
 
-* `python -m game`\
+3. Install the dependencies listed in the `Pipfile`:
+
+   ```bash
+   pipenv install
+   ```
+
+4. To activate the virtual environment created by `pipenv`, run:
+
+   ```bash
+   pipenv shell
+   ```
+
+This ensures all dependencies are installed and isolated within the virtual environment.
+
+### Configuring the Service and Game
+
+#### Environment Variables
+
+The following environment variables are used to configure the game:
+
+* A `.env` file with the credentials required to access the different LLMs is required:
+
+  * `DRAW_FUNCTION`: Specifies the active illustrator to use for generating images.
+    The available options are:
+    * `dalle_2`
+    * `dalle_3`
+    * `gemini`
+    * `gpt`
+    * `grok`
+    * `grok_x`
+    * `pixazo`
+    * `subnp` *(default)*
+
+    If the `DRAW_FUNCTION` environment variable is not set, the game will default to
+    using the `subnp` illustrator.
+
+    If the variable is set to a value that is not in the list above, the game will
+    behave as if no illustrator is configured, and a fixed image will be used instead.
+    *(For clarity, we recommend setting it to "NONE" if no image mode is desired.)*
+
+  * `OPENAI_API_KEY`: Required always as it's used by the *"storyteller"*.
+    *(Also used by Dall·E illustrators)*
+  * `XAI_API_KEY`: Required if Grok's illustrator is used.
+    *(Less prude, faster and portrait mode)*
+  * `GOOGLE_API_KEY` Required if Gemini's illustrator is used.
+  * `PIXAZO_API_KEY` Required if Pixazo's illustrator is used. *(Free tier)*
+
+  Obviously the used services must have been topped up with a small amount to generate
+  the responses and the images.\
+  *Refer to each service's current billing information.*
+
+#### Extra configuration
+
+Several game values can be set in the `config.py` file.
+
+* `SCENE_STYLE`: Defines the visual style for scene illustrations.
+  (e.g., "Colorful Cinematic and Photorealistic").
+* `STORYTELLER_LIMIT`: Limits the size of scene descriptions to ensure compatibility
+  with image generation models.
+
+### Game Launch
+
+The game can be launched from the terminal. Navigate to the game's root folder:
+
+* `..\ai-dungeon-extraction-game`
+
+Run one of the following commands:
+
+* `python -m game`
   *Notice the `-m` is required due to the project's structure and import strategy.*
 
-Game will take a few seconds to set up service and configure then logs will start to
-show, among them the service address.
+* `gradio app.py`
+  *This enables the autoreload function while editing the code.*
 
-It will attempt to launch your default browser directly to the game's page.
+The game will take a few seconds to set up services and configurations. Logs will start
+to show, including the service address.
 
-The game can be stopped by hitting `ctrl + c` on the same terminal.
+The game can be stopped by hitting `Ctrl + C` in the same terminal.
 
-## Playing the game
+### Playing the Game
 
-Once on the browser the Starting screen will be shown:
+Once in the browser, the starting screen will be displayed:
 
 ![The Chair](images/start_view.jpg)
 
-There you should input the kind of game you want to play on the lower box and submit.
+Input the kind of game you want to play in the lower box and submit.
 
-Your input can be as simple as a single word, like “spaceship”, or as detailed as you
+Your input can be as simple as a single word, like "spaceship," or as detailed as you
 like.
 
 ![Set the adventure](images/start_input.jpg)
@@ -130,13 +191,13 @@ next.
 Although the game begins in English, if you switch to another language the Storyteller
 understands, it will seamlessly continue in that language.
 
-You’re free to type any action you want, the Storyteller will adapt.
+You’re free to type any action you want, and the Storyteller will adapt.
 Still, it’s instructed to keep the world coherent, so don’t expect to go completely off
 the rails.
 
 ![Adventurer acts](images/first_input.jpg)
 
-The game continues this way
+The game continues this way:
 
 ![Adventurer dies](images/advance_adventure.jpg)
 
@@ -145,4 +206,4 @@ or meet your end.
 
 ![Adventurer dies](images/tragic_end.jpg)
 
-The cling the bottom button to start over a new game.
+Click the bottom button to start a new game.
