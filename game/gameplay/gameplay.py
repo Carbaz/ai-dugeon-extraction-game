@@ -1,5 +1,6 @@
 """AI Mastered Dungeon Extraction Game gameplay module."""
 
+import asyncio
 from logging import getLogger
 from typing import Callable, NamedTuple
 
@@ -26,7 +27,7 @@ class Gameplay_Config(NamedTuple):
 
 def get_gameplay_function(config: Gameplay_Config):
     """Return a pre-configured turn gameplay function."""
-    def gameplay_function(message, history):
+    async def gameplay_function(message, history):
         """Generate Game Master's response and draw the scene image."""
         # Request narration.
         _logger.info(f'NARRATING SCENE...')
@@ -40,8 +41,13 @@ def get_gameplay_function(config: Gameplay_Config):
         # Update history.
         history.append({"role": "user", "content": message})
         history.append({"role": "assistant", "content": response.model_dump_json()})
-        # Draw scene.
-        if config.draw_func:
+
+        # Prepare drawing task
+        async def draw_scene():
+            if not config.draw_func:
+                _logger.info(f'DRAWING DISABLED...')
+                return config.disable_img
+
             _logger.info(f'DRAWING SCENE...')
             try:
                 scene_data = {'scene_description': response.scene_description,
@@ -49,17 +55,17 @@ def get_gameplay_function(config: Gameplay_Config):
                 scene_prompt = config.scene_prompt.format(**scene_data)
                 _logger.info(f'PROMPT BODY IS: \n\n{scene_prompt}\n')
                 _logger.info(f'PROMPT LENGTH IS: {len(scene_prompt)}')
-                scene = config.draw_func(scene_prompt)
+                return await asyncio.to_thread(config.draw_func, scene_prompt)
             except Exception as ex:
-                scene = config.error_img
-                response = config.error_illustrator.format(ex=ex)
                 _logger.warning(f'ERROR DRAWING SCENE: {ex}')
-                return scene, None, response, history, ''
-        else:
-            _logger.info(f'DRAWING DISABLED...')
-            scene = config.disable_img
-        # Compose ambience.
-        if config.compose_func:
+                raise
+
+        # Prepare composing task
+        async def compose_scene():
+            if not config.compose_func:
+                _logger.info(f'COMPOSING DISABLED...')
+                return None
+
             _logger.info(f'COMPOSING SCENE...')
             try:
                 compose_data = {'scene_description': response.scene_description,
@@ -67,13 +73,20 @@ def get_gameplay_function(config: Gameplay_Config):
                 compose_prompt = config.compose_prompt.format(**compose_data)
                 _logger.info(f'COMPOSE PROMPT BODY IS: \n\n{compose_prompt}\n')
                 _logger.info(f'COMPOSE PROMPT LENGTH IS: {len(compose_prompt)}')
-                ambience = config.compose_func(compose_prompt)
+                return await asyncio.to_thread(config.compose_func, compose_prompt)
             except Exception as ex:
-                ambience = None
                 _logger.warning(f'ERROR COMPOSING SCENE: {ex}')
-        else:
-            _logger.info(f'COMPOSING DISABLED...')
-            ambience = None
+                return None
+
+        # Run both tasks concurrently
+        try:
+            scene, ambience = await asyncio.gather(draw_scene(), compose_scene())
+        except Exception as ex:
+            scene = config.error_img
+            response = config.error_illustrator.format(ex=ex)
+            _logger.error(f'ERROR IN SCENE OPERATIONS: {ex}')
+            return scene, None, response, history, ''
+
         return scene, ambience, response, history, ''
     return gameplay_function
 

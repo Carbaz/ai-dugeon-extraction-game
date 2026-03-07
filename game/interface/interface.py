@@ -1,9 +1,10 @@
 """AI Mastered Dungeon Extraction Game Gradio interface module."""
 
+import asyncio
+from logging import getLogger
 from typing import NamedTuple
 
 import gradio as gr
-from logging import getLogger
 
 
 # Define interface's configuration class.
@@ -73,8 +74,11 @@ def get_interface(submit_function, config: Interface_Config):
             if button_label == config.game_over_label:
                 _logger.warning('GAME OVER STATUS. RESTARTING...')
                 return _reset_game()
-            # Call Storyteller.
-            scene, ambience, response, history, input = submit_function(message, history)
+
+            # Call async Storyteller function
+            scene, ambience, response, history, input = asyncio.run(
+                submit_function(message, history))
+
             # Check game over after (response may be a str if an error occurred).
             if hasattr(response, 'game_over') and response.game_over:
                 _logger.info('GAME OVER AFTER MOVE. LOCKING.')
