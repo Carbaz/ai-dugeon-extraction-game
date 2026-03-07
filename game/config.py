@@ -1,7 +1,7 @@
 """AI Mastered Dungeon Extraction Game Configuration module."""
 
-from logging import getLogger
 import os
+from logging import getLogger
 
 from dotenv import load_dotenv
 
@@ -15,9 +15,9 @@ from .storyteller import narrate, set_description_limit
 load_dotenv(override=True)
 
 
-# Choose draw function.
-#   Choose one from the imported ones up there or set to None to disable images.
-DRAW_FUNCTION = draw_functions.get(os.getenv('DRAW_FUNCTION', 'subnp'))
+# Load configured draw function.
+DRAW_ILLUSTRATOR = os.getenv('DRAW_FUNCTION', 'subnp')
+DRAW_FUNCTION = draw_functions.get(DRAW_ILLUSTRATOR)
 
 # Define a sample scene description for testing purposes.
 SAMPLE_SCENE = '''A shadow-drenched chamber lies buried deep within the bowels of an
@@ -56,8 +56,8 @@ SCENE_PROMPT = '''Render a detailed illustration of the following scene:
 
 """{scene_description}"""
 
-Stay strictly faithful to the description, no added elements, characters, doors, or text.
-Do not depict the adventurer; show only what they see.
+Stay strictly faithful to the description, no extra elements, characters, or text
+not explicitly mentioned. Do not depict the adventurer; show only what they see.
 
 Use a "{scene_style}" visual style.
 '''
@@ -66,7 +66,7 @@ Use a "{scene_style}" visual style.
 SCENE_STYLE = 'Colorful Cinematic and Photorealistic'
 
 # Set a Storyteller scene descriptions size limit to keep the draw prompt in range.
-STORYTELLER_LIMIT = 730
+STORYTELLER_LIMIT = 700
 set_description_limit(STORYTELLER_LIMIT)  # Need to patch pydantic class model.
 
 # Define the storyteller behaviour. Remember to specify a limited scene length.
@@ -181,7 +181,12 @@ UI_CONFIG = Interface_Config(
     start_scene=START_SCENE)
 
 
+# Instantiate logger.
 _logger = getLogger(__name__)
+
+# Log illustrator configuration.
+if DRAW_FUNCTION:
+    _logger.info(f'ILLUSTRATOR USED: {DRAW_ILLUSTRATOR.capitalize()}')
 
 # Log scene prompt length calculation.
 if (max_image_prompt := len(SCENE_PROMPT) + len(SCENE_STYLE) + STORYTELLER_LIMIT) > 1024:
