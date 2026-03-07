@@ -33,6 +33,15 @@ def get_interface(submit_function, config: Interface_Config):
         scene_image = gr.Image(
             label="Scene", value=config.start_img, placeholder=config.place_img,
             type="pil", show_label=False)
+        # Audio playback component.
+        ambience_audio = gr.Audio(
+            label="Ambience",
+            # type="filepath",
+            interactive=False,
+            container=False,
+            autoplay=True,
+            format="mp3",
+            visible=False)
         # Scene's description.
         description_box = gr.Textbox(
             label=config.description_label, value=config.start_scene,
@@ -65,27 +74,27 @@ def get_interface(submit_function, config: Interface_Config):
                 _logger.warning('GAME OVER STATUS. RESTARTING...')
                 return _reset_game()
             # Call Storyteller.
-            scene, response, history, input = submit_function(message, history)
+            scene, ambience, response, history, input = submit_function(message, history)
             _logger.warning(response)
             # Check game over after (response may be a str if an error occurred).
             if hasattr(response, 'game_over') and response.game_over:
                 _logger.info('GAME OVER AFTER MOVE. LOCKING.')
                 return _game_over(scene, response)
             # Return Storyteller response.
-            return scene, response, history, input, gr.update(), gr.update()
+            return scene, ambience, response, history, input, gr.update(), gr.update()
 
         # Assign function to button click event.
         submit_btn.click(
             fn=game_over_wrap, api_visibility="private",
             inputs=[user_input, history_state, submit_btn],
-            outputs=[scene_image, description_box, history_state, user_input,
-                     user_input, submit_btn])
+            outputs=[scene_image, ambience_audio, description_box, history_state,
+                     user_input, user_input, submit_btn])
         # Assign function to input submit event. (Press enter)
         user_input.submit(
             fn=game_over_wrap, api_visibility="private",
             inputs=[user_input, history_state, submit_btn],
-            outputs=[scene_image, description_box, history_state, user_input,
-                     user_input, submit_btn])
+            outputs=[scene_image, ambience_audio, description_box, history_state,
+                     user_input, user_input, submit_btn])
     return ui
 
 
