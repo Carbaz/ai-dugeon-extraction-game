@@ -17,7 +17,7 @@ load_dotenv(override=True)
 
 # Choose draw function.
 #   Choose one from the imported ones up there or set to None to disable images.
-DRAW_FUNCTION = draw_functions.get(os.getenv('DRAW_FUNCTION', 'pixazo'))
+DRAW_FUNCTION = draw_functions.get(os.getenv('DRAW_FUNCTION', 'subnp'))
 
 # Define a sample scene description for testing purposes.
 SAMPLE_SCENE = '''A shadow-drenched chamber lies buried deep within the bowels of an
