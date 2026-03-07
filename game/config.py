@@ -5,6 +5,7 @@ from logging import getLogger
 
 from dotenv import load_dotenv
 
+from .composer import compose
 from .gameplay import Gameplay_Config
 from .illustrator import draw_functions
 from .interface import Interface_Config
@@ -64,6 +65,15 @@ Use a "{scene_style}" visual style.
 
 # Define the scene drawing style, can be a simple word or a short sentence.
 SCENE_STYLE = 'Colorful Cinematic and Photorealistic'
+
+# Define the music composition prompt.
+COMPOSE_PROMPT = '''Compose a "{compose_style}" piece that creates ambience for the
+following scene:
+
+"""{scene_description}"""
+'''
+
+COMPOSE_STYLE = "A cinematic style orchestral"
 
 # Set a Storyteller scene descriptions size limit to keep the draw prompt in range.
 STORYTELLER_LIMIT = 700
@@ -158,9 +168,12 @@ You will use a turn-based system where the player and enemies take turns acting.
 # Configure the game.
 GAME_CONFIG = Gameplay_Config(
     draw_func=DRAW_FUNCTION,
+    compose_func=compose,
     narrate_func=narrate,
     scene_style=SCENE_STYLE,
     scene_prompt=SCENE_PROMPT,
+    compose_style=COMPOSE_STYLE,
+    compose_prompt=COMPOSE_PROMPT,
     storyteller_prompt=STORYTELLER_PROMPT,
     disable_img='images/disabled.jpg',
     error_img='images/machine.jpg',

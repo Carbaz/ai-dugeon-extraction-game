@@ -8,9 +8,12 @@ from typing import Callable, NamedTuple
 class Gameplay_Config(NamedTuple):
     """Gradio interface configuration class."""
     draw_func: Callable
+    compose_func: Callable
     narrate_func: Callable
     scene_style: str
     scene_prompt: str
+    compose_style: str
+    compose_prompt: str
     storyteller_prompt: str
     disable_img: str
     error_img: str
