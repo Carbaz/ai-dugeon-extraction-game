@@ -56,9 +56,5 @@ def draw(prompt, negative=NEGATIVE_PROMPT, size=(1024, 1024)):
     print(f'MESSAGE: {response_data}')
     # Extract the image URL from the response.
     image_url = get_url(response_data)
-    # Fetch the image from the URL.
+    # Fetch the image from the URL and return.
     return fetch_image(image_url)
-
-
-draw("Ducks conquering a castle on a desert on a colorful cinematographic"
-     "and photorealistic style")

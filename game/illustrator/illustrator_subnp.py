@@ -4,11 +4,11 @@ from json import loads
 
 import requests
 
-from .tools import fetch_image
+from tools import fetch_image
 
 
 SUBNP_API_URL = "https://t2i.mcpcore.xyz/generate"
-# SUBNP_API_URL = "https://subnp.com/api/free/generate"
+# SUBNP_API_URL = "https://subnp.com/api/free/generate"  # Probably wrapping the other.
 
 # Choose model to use, comment out the others:
 MODEL = "magic"  # By: MagicStudio
@@ -20,28 +20,17 @@ MODEL = "magic"  # By: MagicStudio
 HEADERS = {"Content-Type": "application/json", "Cache-Control": "no-cache"}
 
 
-# Function definition.
-def draw(prompt, size=(1024, 1024), model=MODEL):
-    """Generate an image based on the prompt."""
-    # Perform the POST request
-    response = requests.post(url=SUBNP_API_URL, stream=True, timeout=30,
-                             json={"prompt": prompt, "model": model},
-                             headers={"Content-Type": "application/json",
-                                      "Cache-Control": "no-cache"})
-    response.raise_for_status()
-
-    # Read the data stream
+def handle_stream(response):
+    """Handle the streaming response from the API."""
     for line in response.iter_lines(decode_unicode=True):
-        print(f'\nLINE: {line}')
         if line:
             # Remove the 'data: ' prefix.
             line = line.replace("data: ", "", 1)
             message = loads(line)
-            print(f'MESSAGE: {message}')
             # Handle different statuses.
             if "imageUrl" in message:
                 print("Image URL:", message["imageUrl"])
-                break
+                return message["imageUrl"]
             elif message.get("status") == "processing":
                 print(f"... {message.get('message')}")
             elif message.get("status") == "error":
@@ -52,9 +41,18 @@ def draw(prompt, size=(1024, 1024), model=MODEL):
                 raise ValueError("No image URL found in the response.")
             else:
                 print(f"Unknown line: {message}")
+    raise ValueError("No image URL found in the response.")
 
+
+# Function definition.
+def draw(prompt, size=(1024, 1024), model=MODEL):
+    """Generate an image based on the prompt."""
+    response = requests.post(url=SUBNP_API_URL, stream=True, timeout=30,
+                             json={"prompt": prompt, "model": model},
+                             headers={"Content-Type": "application/json",
+                                      "Cache-Control": "no-cache"})
+    response.raise_for_status()
+    # Extract the image URL from the response.
+    image_url = handle_stream(response)
     # Fetch the image from the URL and return.
-    return fetch_image(message["imageUrl"])
-
-
-draw("Penguins conquering a castle on a desert")
+    return fetch_image(image_url)
