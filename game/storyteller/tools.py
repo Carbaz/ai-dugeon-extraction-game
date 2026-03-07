@@ -1,6 +1,7 @@
 """AI Mastered Dungeon Extraction Game storyteller tools module WIP."""
 
 from json import loads
+from logging import getLogger
 
 from openai.types.chat import ChatCompletionMessage
 from openai.types.chat import ChatCompletionMessageFunctionToolCall
@@ -18,7 +19,7 @@ def handle_tool_call(message: ChatCompletionMessage):
     """Tools call handler."""
     tool_call = message.tool_calls[0]
     arguments = loads(tool_call.function.arguments)
-    print(f'\nFUNC CALL: {tool_call.function.name}({arguments})\n')
+    _logger.info(f'\nFUNC CALL: {tool_call.function.name}({arguments})\n')
     # Get tool function and call with arguments.
     tool_func = tools_map.get(tool_call.function.name)
     tool_response = tool_func(**arguments)
@@ -45,6 +46,10 @@ draw_signature = {
         "additionalProperties": False,
     },
 }
+
+
+# Instantiate logger.
+_logger = getLogger(__name__)
 
 
 # Tool call response example.

@@ -59,8 +59,8 @@ def get_interface(submit_function, config: Interface_Config):
         def game_over_wrap(message, history, button_label):
             """Check Game over status Before and After Storyteller call."""
             # Check game over before.
-            print(button_label)
-            print(config.game_over_label)
+            _logger.info(button_label)
+            _logger.info(config.game_over_label)
             if button_label == config.game_over_label:
                 _logger.warning('GAME OVER STATUS. RESTARTING...')
                 return _reset_game()
@@ -89,4 +89,5 @@ def get_interface(submit_function, config: Interface_Config):
     return ui
 
 
+# Instantiate logger.
 _logger = getLogger(__name__)
