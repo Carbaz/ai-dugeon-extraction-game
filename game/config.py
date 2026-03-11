@@ -58,7 +58,8 @@ SCENE_PROMPT = '''Render a detailed illustration of the following scene:
 """{scene_description}"""
 
 Stay strictly faithful to the description, no extra elements, characters, or text
-not explicitly mentioned. Do not depict the adventurer; show only what they see.
+not explicitly mentioned. Be accurate to environment, daytime and weather climate
+described. Do not depict the adventurer; show only what they see.
 
 Use a "{scene_style}" visual style.
 '''
@@ -84,7 +85,7 @@ with no noticeable start or end moments.
 COMPOSE_STYLE = "A cinematic and immersive style orchestral"
 
 # Set a Storyteller scene descriptions size limit to keep the draw prompt in range.
-STORYTELLER_LIMIT = 700
+STORYTELLER_LIMIT = 625
 set_description_limit(STORYTELLER_LIMIT)  # Need to patch pydantic class model.
 
 # Define the storyteller behaviour. Remember to specify a limited scene length.
