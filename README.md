@@ -15,6 +15,17 @@ thumbnail: >-
 
 ## The Neural Nexus
 
+The Neural Nexus is an immersive fantasy conversational dungeon extraction game powered
+by advanced AI technologies.
+
+Players embark on thrilling adventures, navigating through procedurally generated
+dungeons filled with treasures, challenges, and enemies. The game leverages cutting-edge
+AI for scene illustration, music composition, and dynamic storytelling, creating a
+unique and engaging experience every time.
+
+With its seamless integration of audio-visual elements and interactive gameplay,
+The Neural Nexus offers a captivating journey into a world of fantasy and imagination.
+
 ### Latest Updates
 
 * **Parallelized Scene Generation**
