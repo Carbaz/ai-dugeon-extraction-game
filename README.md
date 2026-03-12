@@ -8,6 +8,9 @@ emoji: 🧛
 colorFrom: indigo
 colorTo: purple
 short_description: A fantasy dungeon extraction game powered by AI.
+pinned: true
+thumbnail: >-
+  https://cdn-uploads.huggingface.co/production/uploads/67caf50af30e4fe450042ac4/GBtJw_6f8kKFbPaAi6dXk.png
 ---
 
 ## The Neural Nexus
