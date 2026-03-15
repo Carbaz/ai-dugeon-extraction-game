@@ -21,6 +21,7 @@ class Interface_Config(NamedTuple):
     game_over_field: str
     game_over_label: str
     start_scene: str
+    footer_disclaimer: str
 
 
 # Define game's interface.
@@ -91,6 +92,9 @@ def get_interface(submit_function, config: Interface_Config):
                           inputs=[user_input, history_state, submit_btn],
                           outputs=[scene_image, ambience_audio, description_box,
                                    history_state, user_input, user_input, submit_btn])
+
+        # Footer with disclaimer.
+        gr.Markdown(config.footer_disclaimer, elem_id="footer-disclaimer")
     return ui
 
 

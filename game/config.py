@@ -174,6 +174,15 @@ You will use a turn-based system where the player and enemies take turns acting.
   * Reaching to zero health or lees implies the adventurer has die.
 """
 
+FOOTER_DISCLAIMER = """
+<div style='text-align: center; font-size: small;'>
+    This game uses generative AI for all its content, including text, images, music,
+    and voice.
+    Interactions and generated content may be used to train models from various
+    providers, such as OpenAI.
+</div>
+"""
+
 # Configure the game.
 GAME_CONFIG = Gameplay_Config(
     draw_func=DRAW_FUNCTION,
@@ -202,6 +211,7 @@ UI_CONFIG = Interface_Config(
     input_command='Awaiting neural imprint…',
     game_over_field='Game Over',
     game_over_label='Disengage Neural Links',
+    footer_disclaimer=FOOTER_DISCLAIMER,
     start_scene=START_SCENE)
 
 
