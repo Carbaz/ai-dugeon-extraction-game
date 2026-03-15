@@ -37,7 +37,7 @@ def get_interface(submit_function, config: Interface_Config):
         # Scene's ambience.
         # ambience_audio = None
         ambience_audio = gr.Audio(label="Ambience", show_label=False, sources=[],
-                                  loop=True, interactive=False, autoplay=True,
+                                  loop=True, interactive=False, autoplay=False,
                                   value=config.start_ambience, format="mp3",
                                   waveform_options={"waveform_progress_color":
                                                     "#3571C0"})
