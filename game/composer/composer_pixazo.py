@@ -7,6 +7,7 @@ from logging import getLogger
 
 import requests
 from dotenv import load_dotenv
+from pydub import AudioSegment
 
 
 # Instantiate logger.
@@ -64,17 +65,23 @@ def get_composition_url(task_id, max_retries=3):
     raise TimeoutError(f"Exceeded maximum retries ({max_retries}) for task: {task_id}")
 
 
-def fetch_composition(url):
-    """Fetch the composition from the URL and return it as an in-memory object."""
+def fetch_composition(url, reduction=6):
+    """Fetch and return composition with reduced volume as an in-memory object.
+
+    reduction: Volume reduction in dB (default: 6 for ~50% reduction).
+               Higher values = quieter audio.
+    """
     response = requests.get(url, headers=HEADERS)
     response.raise_for_status()
     audio_content = response.content
-    # Store the audio content in an in-memory BytesIO object
-    audio_file = BytesIO(audio_content)
-    audio_file.name = "composition.mp3"  # Set a name for the in-memory file
-    _logger.info("Audio track fetched and stored in memory.")
-    # print("Audio track fetched and stored in memory.")
-    # Return the in-memory file object
+    # Load audio from bytes
+    audio = AudioSegment.from_mp3(BytesIO(audio_content))
+    # Apply gain adjustment (invert the reduction value)
+    adjusted_audio = audio.apply_gain(-reduction)
+    # Export to bytes and store the audio content in an in-memory BytesIO object
+    audio_file = BytesIO(adjusted_audio.export(format="mp3"))
+    audio_file.name = "composition.mp3"
+    _logger.info(f"Track fetched, volume reduced by {reduction}dB and stored in memory.")
     return audio_file
 
 
