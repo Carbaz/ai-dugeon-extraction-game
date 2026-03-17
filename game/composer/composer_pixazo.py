@@ -103,13 +103,18 @@ def compose(prompt, lyrics=""):
 
 # ## ######################################################
 
-def play_on_jupyter(composition, lyrics=""):
-    """Play the composition in a Jupyter notebook."""
+def play_on_jupyter(audio_file):
+    """Play the audio file in a Jupyter notebook."""
     from IPython.display import Audio
-    print(f"Generating composition for: {composition}...")
-    print(f"Generated at: {(composition_url := compose(composition, lyrics))}")
-    audio_file = fetch_composition(composition_url)
     return Audio(audio_file.read(), autoplay=True)
+
+
+def compose_on_jupyter(composition, lyrics="", volume=1):
+    """Generate the composition in a Jupyter notebook."""
+    print(f"Generating composition for:\n{composition}\nWith lyrics:\n{lyrics}")
+    print(f"Generated at: {(composition_url := compose(composition, lyrics))}")
+    audio_file = fetch_composition(composition_url, volume=volume)
+    return audio_file
 
 
 test_style = """
