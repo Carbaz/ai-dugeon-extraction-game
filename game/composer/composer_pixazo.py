@@ -8,6 +8,7 @@ from logging import getLogger
 import requests
 from dotenv import load_dotenv
 from pydub import AudioSegment
+from pydub.utils import ratio_to_db
 
 
 # Instantiate logger.
@@ -124,16 +125,56 @@ sweeping strings, and powerful brass, designed to evoke tension and grandeur"""
 test_prompt = f"""
 A cinematic {test_style} style atmosphere.
 The composition should feature heavy percussion, powerful brass, and sweeping strings,
-building tension and grandeur.
-The piece must be perfectly loopable, with seamless transitions from the end back to
-the beginning, ensuring no audible cuts or breaks. Under no circumstances should the
-loop rely on muted or faded sections at the start or end; the transitions must be
-entirely natural, with the melodic and rhythmic flow fully supporting the loop.
-Additionally, there must not be an end crescendo, final note, or any element that
-denotes the conclusion of the piece. The loop reproduction must feel continuous,
-with no noticeable start or end moments.
+building tension and grandeur throughout the piece.
+Create a dramatic and emotional musical journey that supports the narrative of the
+lyrics, with distinct sections for verses, chorus, and bridges that showcase the dynamic
+range of the orchestral arrangement.
 """
 
-test_lyrics = (
-    "The world was young, the mountains green, No stain yet on the Moon was seen, "
-    "No words were laid on stream or stone, When Durin woke and walked alone.")
+# Original lyrics written by GitHub Copilot (Claude Haiku 4.5)
+# Theme: Awakening, creation, light emerging from darkness, building worlds
+test_lyrics = """
+[Intro - orchestral]
+
+[Verse 1]
+From silence deep, the first light breaks
+The ancient stone begins to wake
+The void retreats, the void recedes
+A world is born of primal seeds
+
+[Verse 2]
+The mountains rise from sleeping earth
+Creation stirs, the moment of rebirth
+Across the lands, the rivers flow
+A symphony of all below
+
+[Pre-Chorus]
+Can you feel it?
+The awakening call
+
+[Chorus]
+Rise, rise, the world unfolds
+Stories waiting to be told
+From the darkness, light takes hold
+A new beginning, brave and bold
+
+[Verse 3]
+The winds are singing ancient songs
+The earth belongs, the world belongs
+Each breath of life, each beating heart
+This is the moment, the brand new start
+
+[Bridge]
+We are the watchers of the dawn
+We are the dreamers carrying on
+With every step, with every sound
+We build the world we've found
+
+[Chorus]
+Rise, rise, the world unfolds
+Stories waiting to be told
+From the darkness, light takes hold
+A new beginning, brave and bold
+
+[Outro - fading]
+"""
