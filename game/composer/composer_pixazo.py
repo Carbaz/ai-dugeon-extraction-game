@@ -66,23 +66,22 @@ def get_composition_url(task_id, max_retries=3):
     raise TimeoutError(f"Exceeded maximum retries ({max_retries}) for task: {task_id}")
 
 
-def fetch_composition(url, reduction=6):
-    """Fetch and return composition with reduced volume as an in-memory object.
+def fetch_composition(url, volume=1):
+    """Fetch composition, adjust volume and return as an in-memory object.
 
-    reduction: Volume reduction in dB (default: 6 for ~50% reduction).
-               Higher values = quieter audio.
+    Volume: 0.5 = 50% volume.
     """
     response = requests.get(url, headers=HEADERS)
     response.raise_for_status()
     audio_content = response.content
     # Load audio from bytes
     audio = AudioSegment.from_mp3(BytesIO(audio_content))
-    # Apply gain adjustment (invert the reduction value)
-    adjusted_audio = audio.apply_gain(-reduction)
+    # Apply gain adjustment based on volume ratio
+    adjusted_audio = audio.apply_gain(ratio_to_db(volume))
     # Export to bytes and store the audio content in an in-memory BytesIO object
-    audio_file = BytesIO(adjusted_audio.export(format="mp3"))
+    audio_file = BytesIO(adjusted_audio.export(format="mp3").read())
     audio_file.name = "composition.mp3"
-    _logger.info(f"Track fetched, volume reduced by {reduction}dB and stored in memory.")
+    _logger.info(f"Track fetched, volume adjusted to {volume} and stored in memory.")
     return audio_file
 
 
