@@ -33,9 +33,10 @@ HEADERS = {"Content-Type": "application/json",
 
 def get_data(prompt, lyrics=""):
     """Return the data payload for a Pixazo music generation request."""
-    return {"prompt": prompt, "lyrics": lyrics,
-            "instrumental": not lyrics, "bpm": 140, "duration": 120,
-            "infer_steps": 25, "guidance_scale": 7.5, "seed": 42}
+    return {"prompt": prompt, "lyrics": lyrics, "instrumental": not lyrics,
+            # TODO: Instrumental can actually be without lyrics.
+            "bpm": 140, "duration": 120, "infer_steps": 25,
+            "guidance_scale": 7.5, "seed": 42}
 
 
 def get_composition_url(task_id, max_retries=3):
@@ -88,6 +89,7 @@ def fetch_composition(url, reduction=6):
 def compose(prompt, lyrics=""):
     """Generate a music track based on the prompt."""
     data = get_data(prompt, lyrics)
+    print(f'COMPOSE REQUEST: {data}')
     response = requests.post(PIXAZO_API_URL, json=data, headers=HEADERS, timeout=15)
     response.raise_for_status()
     response_data = response.json()
