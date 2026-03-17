@@ -85,9 +85,9 @@ def fetch_composition(url, reduction=6):
     return audio_file
 
 
-def compose(prompt):
+def compose(prompt, lyrics=""):
     """Generate a music track based on the prompt."""
-    data = get_data(prompt)
+    data = get_data(prompt, lyrics)
     response = requests.post(PIXAZO_API_URL, json=data, headers=HEADERS, timeout=15)
     response.raise_for_status()
     response_data = response.json()
@@ -102,11 +102,11 @@ def compose(prompt):
 
 # ## ######################################################
 
-def play_on_jupyter(composition):
+def play_on_jupyter(composition, lyrics=""):
     """Play the composition in a Jupyter notebook."""
     from IPython.display import Audio
     print(f"Generating composition for: {composition}...")
-    print(f"Generated at: {(composition_url := compose(composition))}")
+    print(f"Generated at: {(composition_url := compose(composition, lyrics))}")
     audio_file = fetch_composition(composition_url)
     return Audio(audio_file.read(), autoplay=True)
 
@@ -127,3 +127,7 @@ Additionally, there must not be an end crescendo, final note, or any element tha
 denotes the conclusion of the piece. The loop reproduction must feel continuous,
 with no noticeable start or end moments.
 """
+
+test_lyrics = (
+    "The world was young, the mountains green, No stain yet on the Moon was seen, "
+    "No words were laid on stream or stone, When Durin woke and walked alone.")
