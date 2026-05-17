@@ -139,8 +139,9 @@ building tension and grandeur throughout the piece.
 Create a dramatic and emotional musical journey that supports the narrative of the
 lyrics, with distinct sections for verses, chorus, and bridges that showcase the dynamic
 range of the orchestral arrangement.
-Voices should be grave ones, with a sense of awakening and creation,
-as if the music is emerging from darkness.
+Voices should be grave ones, mix a male grave chorus voices and a female main vocal for
+the chorus parts with a sense of awakening and creation, as if the music is emerging
+from darkness.
 """
 
 # Original lyrics written by GitHub Copilot (Claude Haiku 4.5)
