@@ -21,11 +21,9 @@ PIXAZO_URL = "https://gateway.pixazo.ai"
 PIXAZO_API_KEY = os.getenv('PIXAZO_API_KEY')
 
 PIXAZO_MODEL = "tracks/v1/generate"
-PIXAZO_TRACKS = "tracks/v1/status"
 _logger.info(f'COMPOSER MODEL: {PIXAZO_MODEL}')
 
 PIXAZO_API_URL = f"{PIXAZO_URL}/{PIXAZO_MODEL}"
-PIXAZO_TRACKS_URL = f"{PIXAZO_URL}/{PIXAZO_TRACKS}"
 
 HEADERS = {"Content-Type": "application/json",
            "Cache-Control": "no-cache",
@@ -40,31 +38,44 @@ def get_data(prompt, lyrics=""):
             "guidance_scale": 7.5, "seed": 42}
 
 
-def get_composition_url(task_id, max_retries=3):
+def get_composition_url(response_data, max_retries=6, retry_delay=10):
     """Retrieve the composition URL, retrying until ready or limit reached."""
-    data = {"task_id": task_id}
-    for _ in range(max_retries):
-        _logger.info(f'CHECKING STATUS FOR TASK ID: {task_id}')
-        # print(f'CHECKING STATUS FOR TASK ID: {task_id}')
-        response = requests.post(PIXAZO_TRACKS_URL, json=data, headers=HEADERS)
+    request_id = response_data.get("request_id")
+    polling_url = response_data.get("polling_url")
+    for turn in range(max_retries):
+        _logger.info(f'CHECKING STATUS FOR REQUEST ID: {request_id}'
+                     f' ({turn + 1}/{max_retries})')
+        # print(f'CHECKING STATUS FOR REQUEST ID: {request_id}'
+        #       f' ({turn + 1}/{max_retries})')
+        response = requests.get(polling_url, headers=HEADERS)
         response.raise_for_status()
         response_data = response.json()
+        _logger.info(f'POLLING RESPONSE: {response_data}')
+        # print(f'POLLING RESPONSE: {response_data}')
         status = response_data.get("status")
-        if status == "completed":
-            audio_urls = response_data["result"].get("audio_urls")
+        if status.upper() == "COMPLETED":
+            audio_urls = response_data["output"].get("media_url")
             _logger.info(f"... Task is completed, audio at: {audio_urls}")
             # print(f"... Task is completed, audio at: {audio_urls}")
             if audio_urls:
                 return audio_urls[0]  # Return the first URL from the list
             else:
                 raise ValueError("No audio URLs found in the response.")
-        elif status == "processing":
-            _logger.info(f"... Task is still processing: {response_data.get('stage')}")
-            # print(f"Task is still processing: {response_data.get('stage')}")
-            time.sleep(5)  # Wait for 5 seconds before retrying
+        elif status.upper() == "FAILED" or status.upper() == "ERROR":
+            _logger.info(f"... Task has failed: {response_data.get('error')}")
+            # print(f"... Task has failed: {response_data.get('error')}")
+            raise ValueError("Task has failed.")
+        elif status.upper() == "QUEUED":
+            _logger.info("... Task is still queued")
+            # print("... Task is still queued")
+            time.sleep(retry_delay)  # Wait for retry_delay seconds before retrying
+        elif status.upper() == "PROCESSING":
+            _logger.info("... Task is still processing")
+            # print("... Task is still processing")
+            time.sleep(retry_delay)  # Wait for retry_delay seconds before retrying
         else:
             raise ValueError(f"Unexpected status: {status}")
-    raise TimeoutError(f"Exceeded maximum retries ({max_retries}) for task: {task_id}")
+    raise TimeoutError(f"Exceeded maxi retries ({max_retries}) for task: {request_id}")
 
 
 def fetch_composition(url, volume=1):
@@ -89,15 +100,14 @@ def fetch_composition(url, volume=1):
 def compose(prompt, lyrics=""):
     """Generate a music track based on the prompt."""
     data = get_data(prompt, lyrics)
-    print(f'COMPOSE REQUEST: {data}')
+    # print(f'COMPOSE REQUEST: {data}')
     response = requests.post(PIXAZO_API_URL, json=data, headers=HEADERS, timeout=15)
     response.raise_for_status()
     response_data = response.json()
     _logger.info(f'COMPOSE TASK: {response_data}')
-    # print(f'MESSAGE: {response_data}')
-    task_id = response_data.get("task_id")
+    # print(f'COMPOSE TASK: {response_data}')
     # Retrieve the composition_url, waiting if necessary.
-    composition_url = get_composition_url(task_id)
+    composition_url = get_composition_url(response_data)
     # Fetch the composition from the URL and return.
     return composition_url
 
@@ -129,6 +139,8 @@ building tension and grandeur throughout the piece.
 Create a dramatic and emotional musical journey that supports the narrative of the
 lyrics, with distinct sections for verses, chorus, and bridges that showcase the dynamic
 range of the orchestral arrangement.
+Voices should be grave ones, with a sense of awakening and creation,
+as if the music is emerging from darkness.
 """
 
 # Original lyrics written by GitHub Copilot (Claude Haiku 4.5)
