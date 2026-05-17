@@ -5,7 +5,7 @@ from logging import getLogger
 
 from dotenv import load_dotenv
 
-import prompts
+from . import prompts
 from .composer import compose_pixazo
 from .gameplay import Gameplay_Config
 from .illustrator import draw_functions
@@ -19,6 +19,12 @@ load_dotenv(override=True)
 # Load configured draw function.
 DRAW_ILLUSTRATOR = os.getenv('DRAW_FUNCTION', 'subnp')
 DRAW_FUNCTION = draw_functions.get(DRAW_ILLUSTRATOR)
+
+# Check env if Music generation is enabled.
+if os.getenv('MUSIC_GENERATION', 'true').lower() in ['true', '1', 'yes']:
+    COMPOSE_FUNCTION = compose_pixazo
+else:
+    COMPOSE_FUNCTION = None
 
 # Set Storyteller description limit based on prompts configuration.
 set_description_limit(prompts.STORYTELLER_LIMIT)
@@ -70,6 +76,9 @@ _logger = getLogger(__name__)
 # Log illustrator configuration.
 if DRAW_FUNCTION:
     _logger.info(f'ILLUSTRATOR USED: {DRAW_ILLUSTRATOR.capitalize()}')
+
+# Log composer configuration.
+_logger.info(f'MUSIC GENERATION {"ENABLED" if COMPOSE_FUNCTION else "DISABLED"}')
 
 # Log scene prompt length calculation.
 if (max_image_prompt := len(prompts.SCENE_PROMPT)
