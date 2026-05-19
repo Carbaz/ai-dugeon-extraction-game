@@ -2,14 +2,14 @@
 
 import asyncio
 from logging import getLogger
-from typing import Callable, NamedTuple
+from typing import Callable, NamedTuple, Optional
 
 
 # Define gameplay's configuration class.
 class Gameplay_Config(NamedTuple):
     """Gradio interface configuration class."""
     draw_func: Callable
-    compose_func: Callable
+    compose_func: Optional[Callable]
     narrate_func: Callable
     scene_style: str
     scene_prompt: str
@@ -27,7 +27,7 @@ class Gameplay_Config(NamedTuple):
 
 def get_gameplay_function(config: Gameplay_Config):
     """Return a pre-configured turn gameplay function."""
-    async def gameplay_function(message, history):
+    async def gameplay_function(message, history, music_enabled):
         """Generate Game Master's response and draw the scene image."""
         # Request narration.
         _logger.info(f'NARRATING SCENE...')
@@ -62,7 +62,7 @@ def get_gameplay_function(config: Gameplay_Config):
 
         # Prepare composing task
         async def compose_scene():
-            if not config.compose_func:
+            if not config.compose_func or not music_enabled:
                 _logger.info(f'COMPOSING DISABLED...')
                 return None
 

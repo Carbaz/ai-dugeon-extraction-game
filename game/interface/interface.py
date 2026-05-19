@@ -18,6 +18,8 @@ class Interface_Config(NamedTuple):
     input_button: str
     input_label: str
     input_command: str
+    music_toggle_label: str
+    music_disabled: bool
     game_over_field: str
     game_over_label: str
     start_scene: str
@@ -48,48 +50,53 @@ def get_interface(submit_function, config: Interface_Config):
         # Player's command.
         user_input = gr.Textbox(label=config.input_label,
                                 placeholder=config.input_command)
+        # Music toggle.
+        music_enabled = gr.Checkbox(
+            label=config.music_toggle_label,
+            value=not config.music_disabled,
+            interactive=not config.music_disabled)
         # Submit button.
         submit_btn = gr.Button(config.input_button)
 
         # Define Game Over control.
         def _reset_game():
-            """Return Initial values for game restart."""
-            return (config.start_img, config.start_scene, [], '',
+            """Return initial values for game restart."""
+            return (config.start_img, config.start_ambience, config.start_scene, [], '',
                     gr.update(interactive=True),
                     gr.update(value=config.input_button))
 
-        def _game_over(scene, response):
+        def _game_over(scene, ambience, response):
             """Return Game Over values, blocking input field."""
-            return (scene, response, [], config.game_over_field,
+            return (scene, ambience, response, [], config.game_over_field,
                     gr.update(interactive=False),
                     gr.update(value=config.game_over_label))
 
-        def game_over_wrap(message, history, button_label):
-            """Check Game over status Before and After Storyteller call."""
+        def game_over_wrap(message, history, button_label, music_toggle):
+            """Check Game over status before and after Storyteller call."""
             # Check game over before.
             if button_label == config.game_over_label:
                 _logger.warning('GAME OVER STATUS. RESTARTING...')
                 return _reset_game()
 
-            # Call async Storyteller function
+            # Call async Storyteller function.
             scene, ambience, response, history, input = asyncio.run(
-                submit_function(message, history))
+                submit_function(message, history, music_toggle))
 
             # Check game over after (response may be a str if an error occurred).
             if hasattr(response, 'game_over') and response.game_over:
                 _logger.info('GAME OVER AFTER MOVE. LOCKING.')
-                return _game_over(scene, response)
+                return _game_over(scene, ambience, response)
             # Return Storyteller response.
             return scene, ambience, response, history, input, gr.update(), gr.update()
 
         # Assign function to button click event.
         submit_btn.click(fn=game_over_wrap, api_visibility="private",
-                         inputs=[user_input, history_state, submit_btn],
+                         inputs=[user_input, history_state, submit_btn, music_enabled],
                          outputs=[scene_image, ambience_audio, description_box,
                                   history_state, user_input, user_input, submit_btn])
         # Assign function to input submit event. (Press enter)
         user_input.submit(fn=game_over_wrap, api_visibility="private",
-                          inputs=[user_input, history_state, submit_btn],
+                          inputs=[user_input, history_state, submit_btn, music_enabled],
                           outputs=[scene_image, ambience_audio, description_box,
                                    history_state, user_input, user_input, submit_btn])
 

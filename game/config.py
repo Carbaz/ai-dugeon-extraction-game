@@ -41,7 +41,7 @@ FOOTER_DISCLAIMER = """
 # Configure the game.
 GAME_CONFIG = Gameplay_Config(
     draw_func=DRAW_FUNCTION,
-    compose_func=compose_pixazo,
+    compose_func=COMPOSE_FUNCTION,
     narrate_func=narrate,
     scene_style=prompts.SCENE_STYLE,
     scene_prompt=prompts.SCENE_PROMPT,
@@ -64,6 +64,9 @@ UI_CONFIG = Interface_Config(
     input_button='Imprint your will',
     input_label='Cognitive Imprint',
     input_command='Awaiting neural imprint…',
+    music_toggle_label=('Generate Music' if COMPOSE_FUNCTION
+                        else 'Music Generation disabled on server'),
+    music_disabled=not bool(COMPOSE_FUNCTION),
     game_over_field='Game Over',
     game_over_label='Disengage Neural Links',
     footer_disclaimer=FOOTER_DISCLAIMER,
