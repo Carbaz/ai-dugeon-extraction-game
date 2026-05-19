@@ -11,6 +11,7 @@ python-dotenv = "*"
 openai = "*"
 xai-sdk = "*"
 google-genai = "*"
+deepgram-sdk = "*"
 # UI Framework.
 gradio = "*"
 # Image Processing.
