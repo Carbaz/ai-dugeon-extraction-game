@@ -82,6 +82,9 @@ def get_interface(submit_function, config: Interface_Config):
             scene, ambience, response, history, input = asyncio.run(
                 submit_function(message, history, music_toggle))
 
+            # Preserve existing audio in the widget if no new ambience was generated.
+            ambience = ambience or gr.update()
+
             # Check game over after (response may be a str if an error occurred).
             if hasattr(response, 'game_over') and response.game_over:
                 _logger.info('GAME OVER AFTER MOVE. LOCKING.')
