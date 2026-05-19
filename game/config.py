@@ -64,7 +64,8 @@ UI_CONFIG = Interface_Config(
     input_button='Imprint your will',
     input_label='Cognitive Imprint',
     input_command='Awaiting neural imprint…',
-    music_toggle_label=('Generate Music' if COMPOSE_FUNCTION
+    music_toggle_label=('Generate Music (Disable for faster generation)'
+                        if COMPOSE_FUNCTION
                         else 'Music Generation disabled on server'),
     music_disabled=not bool(COMPOSE_FUNCTION),
     game_over_field='Game Over',
