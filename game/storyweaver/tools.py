@@ -1,4 +1,4 @@
-"""AI Mastered Dungeon Extraction Game storyteller tools module WIP."""
+"""AI Mastered Dungeon Extraction Game storyweaver tools module WIP."""
 
 from json import loads
 from logging import getLogger

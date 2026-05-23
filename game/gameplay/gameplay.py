@@ -10,12 +10,12 @@ class Gameplay_Config(NamedTuple):
     """Gradio interface configuration class."""
     draw_func: Callable
     compose_func: Optional[Callable]
-    narrate_func: Callable
+    weave_func: Callable
     scene_style: str
     scene_prompt: str
     compose_style: str
     compose_prompt: str
-    storyteller_prompt: str
+    storyweaver_prompt: str
     disable_img: str
     error_img: str
     error_narrator: str
@@ -32,7 +32,7 @@ def get_gameplay_function(config: Gameplay_Config):
         # Request narration.
         _logger.info(f'NARRATING SCENE...')
         try:
-            response = config.narrate_func(message, history, config.storyteller_prompt)
+            response = config.weave_func(message, history, config.storyweaver_prompt)
         except Exception as ex:
             scene = config.error_img
             response = config.error_narrator.format(ex=ex)

@@ -10,7 +10,7 @@ from .composer import compose_pixazo
 from .gameplay import Gameplay_Config
 from .illustrator import draw_functions
 from .interface import Interface_Config
-from .storyteller import narrate, set_description_limit
+from .storyweaver import set_description_limit, weave
 
 
 # Environment initialization.
@@ -26,8 +26,8 @@ if os.getenv('MUSIC_GENERATION', 'true').lower() in ['true', '1', 'yes']:
 else:
     COMPOSE_FUNCTION = None
 
-# Set Storyteller description limit based on prompts configuration.
-set_description_limit(prompts.STORYTELLER_LIMIT)
+# Set Storyweaver description limit based on prompts configuration.
+set_description_limit(prompts.STORYWEAVER_LIMIT)
 
 FOOTER_DISCLAIMER = """
 <div style='text-align: center; font-size: small;'>
@@ -42,12 +42,12 @@ FOOTER_DISCLAIMER = """
 GAME_CONFIG = Gameplay_Config(
     draw_func=DRAW_FUNCTION,
     compose_func=COMPOSE_FUNCTION,
-    narrate_func=narrate,
+    weave_func=weave,
     scene_style=prompts.SCENE_STYLE,
     scene_prompt=prompts.SCENE_PROMPT,
     compose_style=prompts.COMPOSE_STYLE,
     compose_prompt=prompts.COMPOSE_PROMPT,
-    storyteller_prompt=prompts.STORYTELLER_PROMPT,
+    storyweaver_prompt=prompts.STORYWEAVER_PROMPT,
     disable_img='images/disabled.jpg',
     error_img='images/machine.jpg',
     error_narrator='NEURAL SINAPSIS ERROR\n\n{ex}\n\nEND OF LINE\n\nRE-SUBMIT_',
@@ -86,7 +86,7 @@ _logger.info(f'MUSIC GENERATION {"ENABLED" if COMPOSE_FUNCTION else "DISABLED"}'
 
 # Log scene prompt length calculation.
 if (max_image_prompt := len(prompts.SCENE_PROMPT)
-    + len(prompts.SCENE_STYLE) + prompts.STORYTELLER_LIMIT) > 1024:
+    + len(prompts.SCENE_STYLE) + prompts.STORYWEAVER_LIMIT) > 1024:
     _logger.warning(f'ESTIMATED SCENE PROMPT MAX SIZE: {max_image_prompt}')
 else:
     _logger.info(f'ESTIMATED SCENE PROMPT MAX SIZE: {max_image_prompt}')

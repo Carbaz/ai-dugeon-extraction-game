@@ -1,4 +1,4 @@
-"""AI Mastered Dungeon Extraction Game Storyteller using OpenAI's GPT."""
+"""AI Mastered Dungeon Extraction Game Storyweaver using OpenAI's GPT."""
 
 from logging import getLogger
 from typing import List
@@ -19,7 +19,7 @@ load_dotenv(override=True)
 
 # Define globals.
 MODEL = 'gpt-5-mini'
-_logger.info(f'STORYTELLER MODEL: {MODEL}')
+_logger.info(f'STORYWEAVER MODEL: {MODEL}')
 
 # Client instantiation.
 CLIENT = OpenAI()
@@ -59,7 +59,7 @@ def set_description_limit(limit):  # HBD: We modify the class definition in runt
 
 
 # Function definition.
-def narrate(message, history, system_message, client=CLIENT, model=MODEL):
+def weave(message, history, system_message, client=CLIENT, model=MODEL):
     """Chat with the game engine."""
     messages = ([{"role": "system", "content": system_message}] + history
                 + [{"role": "user", "content": message}])

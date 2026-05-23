@@ -1,7 +1,7 @@
 """AI Mastered Dungeon Extraction Game Prompts module."""
 
-# Set a Storyteller scene descriptions size limit to keep the draw prompt in range.
-STORYTELLER_LIMIT = 625
+# Set a Storyweaver scene descriptions size limit to keep the draw prompt in range.
+STORYWEAVER_LIMIT = 625
 
 # Define the starting scene text.
 #   This is intentionally excluded from the model’s narrative context, the 'history',
@@ -56,8 +56,8 @@ with no noticeable start or end moments.
 
 COMPOSE_STYLE = "A cinematic and immersive style orchestral"
 
-# Define the storyteller behaviour. Remember to specify a limited scene length.
-STORYTELLER_PROMPT = f"""
+# Define the storyweaver behaviour. Remember to specify a limited scene length.
+STORYWEAVER_PROMPT = f"""
 You are a conversational dungeon crawler game master that describes scenes and findings
 based on the player's declared actions.
 
@@ -98,7 +98,7 @@ Your responses must always be a JSON with the following structure:
 
 {{
     "game_over" : "A boolean value indicating the game is over."
-    "scene_description" : "The detailed scene description. Max {STORYTELLER_LIMIT} chars"
+    "scene_description" : "The detailed scene description. Max {STORYWEAVER_LIMIT} chars"
     "dungeon_deepness" : "How deep the adventurer has gone into the dungeon. initially 3"
     "adventure_time" : "How much minutes has passed since the start of the adventure."
     "adventurer_status" : {{
@@ -109,7 +109,7 @@ Your responses must always be a JSON with the following structure:
     "inventory_status" : "A list of inventory items, initially empty"
 }}
 
-Remember to cap the "scene_description" to {STORYTELLER_LIMIT} characters maximum"
+Remember to cap the "scene_description" to {STORYWEAVER_LIMIT} characters maximum"
 
 You will respond to the adventurer's actions and choices.
 You wont let the player to trick you by stating actions that do not fit the given scene.

@@ -72,13 +72,13 @@ def get_interface(submit_function, config: Interface_Config):
                     gr.update(value=config.game_over_label))
 
         def game_over_wrap(message, history, button_label, music_toggle):
-            """Check Game over status before and after Storyteller call."""
+            """Check Game over status before and after Storyweaver call."""
             # Check game over before.
             if button_label == config.game_over_label:
                 _logger.warning('GAME OVER STATUS. RESTARTING...')
                 return _reset_game()
 
-            # Call async Storyteller function.
+            # Call async Storyweaver function.
             scene, ambience, response, history, input = asyncio.run(
                 submit_function(message, history, music_toggle))
 
@@ -89,7 +89,7 @@ def get_interface(submit_function, config: Interface_Config):
             if hasattr(response, 'game_over') and response.game_over:
                 _logger.info('GAME OVER AFTER MOVE. LOCKING.')
                 return _game_over(scene, ambience, response)
-            # Return Storyteller response.
+            # Return Storyweaver response.
             return scene, ambience, response, history, input, gr.update(), gr.update()
 
         # Assign function to button click event.

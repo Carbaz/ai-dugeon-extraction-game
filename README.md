@@ -20,7 +20,7 @@ by advanced AI technologies.
 
 Players embark on thrilling adventures, navigating through procedurally generated
 dungeons filled with treasures, challenges, and enemies. The game leverages cutting-edge
-AI for scene illustration, music composition, and dynamic storytelling, creating a
+AI for scene illustration, music composition, and dynamic storyweaving, creating a
 unique and engaging experience every time.
 
 With its seamless integration of audio-visual elements and interactive gameplay,
@@ -166,7 +166,7 @@ The following environment variables are used to configure the game:
     behave as if no illustrator is configured, and a fixed image will be used instead.
     *(For clarity, we recommend setting it to "NONE" if no image mode is desired.)*
 
-  * `OPENAI_API_KEY`: Required always as it's used by the *"storyteller"*.
+  * `OPENAI_API_KEY`: Required always as it's used by the *"storyweaver"*.
     *(Also used by Dall·E illustrators)*
   * `XAI_API_KEY`: Required if Grok's illustrator is used.
     *(Less prude, faster and portrait mode)*
@@ -184,7 +184,7 @@ Several game values can be set in the `config.py` file.
 
 * `SCENE_STYLE`: Defines the visual style for scene illustrations.
   (e.g., "Colorful Cinematic and Photorealistic").
-* `STORYTELLER_LIMIT`: Limits the size of scene descriptions to ensure compatibility
+* `STORYWEAVER_LIMIT`: Limits the size of scene descriptions to ensure compatibility
   with image generation models.
 * `COMPOSE_PROMPT`: Defines the structure and requirements for generating
     perfectly loopable audio tracks. The prompt ensures seamless transitions
@@ -225,7 +225,7 @@ like.
 
 ![Set the adventure](images/start_input.jpg)
 
-From that point on, only your imagination (and the Storyteller’s) will set the limits.
+From that point on, only your imagination (and the Storyweaver’s) will set the limits.
 
 Once submitted, the image will update to reflect the scene, accompanied by a description,
 your inventory, your adventurer’s status, and sometimes a few suggestions for what to do
@@ -233,10 +233,10 @@ next.
 
 ![R'lyeh arrive](images/start_adventure.jpg)
 
-Although the game begins in English, if you switch to another language the Storyteller
+Although the game begins in English, if you switch to another language the Storyweaver
 understands, it will seamlessly continue in that language.
 
-You’re free to type any action you want, and the Storyteller will adapt.
+You’re free to type any action you want, and the Storyweaver will adapt.
 Still, it’s instructed to keep the world coherent, so don’t expect to go completely off
 the rails.
 
