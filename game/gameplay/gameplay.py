@@ -18,7 +18,7 @@ class Gameplay_Config(NamedTuple):
     storyweaver_prompt: str
     disable_img: str
     error_img: str
-    error_narrator: str
+    error_weaver: str
     error_composer: str
     error_illustrator: str
 
@@ -29,14 +29,14 @@ def get_gameplay_function(config: Gameplay_Config):
     """Return a pre-configured turn gameplay function."""
     async def gameplay_function(message, history, music_enabled):
         """Generate Game Master's response and draw the scene image."""
-        # Request narration.
-        _logger.info(f'NARRATING SCENE...')
+        # Request weaving.
+        _logger.info(f'WEAVING SCENE...')
         try:
             response = config.weave_func(message, history, config.storyweaver_prompt)
         except Exception as ex:
             scene = config.error_img
-            response = config.error_narrator.format(ex=ex)
-            _logger.error(f'ERROR NARRATING SCENE: {ex}\n{message}\n{history}')
+            response = config.error_weaver.format(ex=ex)
+            _logger.error(f'ERROR WEAVING SCENE: {ex}\n{message}\n{history}')
             return scene, None, response, history, message
         # Update history.
         history.append({"role": "user", "content": message})
