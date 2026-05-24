@@ -11,7 +11,7 @@ from .tools import fetch_image
 _logger = getLogger(__name__)
 
 SUBNP_API_URL = "https://t2i.mcpcore.xyz/generate"
-# SUBNP_API_URL = "https://subnp.com/api/free/generate"  # Probably wrapping the other.
+SUBNP_API_URL = "https://subnp.com/api/free/generate"  # Probably wrapping the other.
 
 # Choose model to use, comment out the others:
 MODEL = "magic"  # By: MagicStudio
