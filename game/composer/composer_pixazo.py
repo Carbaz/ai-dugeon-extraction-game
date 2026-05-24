@@ -55,22 +55,22 @@ def get_composition_url(response_data, max_retries=6, retry_delay=10):
         status = response_data.get("status")
         if status.upper() == "COMPLETED":
             audio_urls = response_data["output"].get("media_url")
-            _logger.info(f"... Task is completed, audio at: {audio_urls}")
+            _logger.info(f"... TASK IS COMPLETED, AUDIO AT: {audio_urls}")
             # print(f"... Task is completed, audio at: {audio_urls}")
             if audio_urls:
                 return audio_urls[0]  # Return the first URL from the list
             else:
                 raise ValueError("No audio URLs found in the response.")
         elif status.upper() == "FAILED" or status.upper() == "ERROR":
-            _logger.info(f"... Task has failed: {response_data.get('error')}")
+            _logger.info(f"... TASK HAS FAILED: {response_data.get('error')}")
             # print(f"... Task has failed: {response_data.get('error')}")
-            raise ValueError("Task has failed.")
+            raise ValueError(f"Task has failed. {response_data.get('error')}")
         elif status.upper() == "QUEUED":
-            _logger.info("... Task is still queued")
+            _logger.info("... TASK IS STILL QUEUED")
             # print("... Task is still queued")
             time.sleep(retry_delay)  # Wait for retry_delay seconds before retrying
         elif status.upper() == "PROCESSING":
-            _logger.info("... Task is still processing")
+            _logger.info("... TASK IS STILL PROCESSING")
             # print("... Task is still processing")
             time.sleep(retry_delay)  # Wait for retry_delay seconds before retrying
         else:
@@ -97,7 +97,7 @@ def fetch_composition(url, volume=1):
     return audio_file
 
 
-def compose(prompt, lyrics=""):
+def compose(prompt, lyrics="[instrumental]"):
     """Generate a music track based on the prompt."""
     data = get_data(prompt, lyrics)
     # print(f'COMPOSE REQUEST: {data}')
@@ -120,7 +120,7 @@ def play_on_jupyter(audio_file):
     return Audio(audio_file.read(), autoplay=True)
 
 
-def compose_on_jupyter(composition, lyrics="", volume=1):
+def compose_on_jupyter(composition, lyrics="[instrumental]", volume=1):
     """Generate the composition in a Jupyter notebook."""
     print(f"Generating composition for:\n{composition}\nWith lyrics:\n{lyrics}")
     print(f"Generated at: {(composition_url := compose(composition, lyrics))}")
