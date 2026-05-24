@@ -1,6 +1,9 @@
 python-dotenv
 openai
-google-genai
 xai-sdk
+google-genai
+deepgram-sdk
 gradio
 pillow
+pyaudio
+simpleaudio
