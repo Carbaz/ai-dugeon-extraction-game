@@ -192,3 +192,6 @@ cache/
 
 # Generated Scripts
 **activate-*-env.*
+
+# Audio outputs
+**/narrator/out*
