@@ -18,7 +18,7 @@ _logger = getLogger(__name__)
 load_dotenv(override=True)
 
 # Define globals.
-MODEL = 'gpt-5-mini'
+MODEL = 'gpt-5.4-mini'
 _logger.info(f'STORYWEAVER MODEL: {MODEL}')
 
 # Client instantiation.
