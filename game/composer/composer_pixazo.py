@@ -92,7 +92,7 @@ def fetch_composition(url, volume=1):
     adjusted_audio = audio.apply_gain(ratio_to_db(volume))
     # Export to bytes and store the audio content in an in-memory BytesIO object
     audio_file = BytesIO(adjusted_audio.export(format="mp3").read())
-    audio_file.name = "composition.mp3"
+    audio_file.name = "out_composition.mp3"
     _logger.info(f"Track fetched, volume adjusted to {volume} and stored in memory.")
     return audio_file
 
