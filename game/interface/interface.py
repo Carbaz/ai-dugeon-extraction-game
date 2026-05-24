@@ -66,7 +66,7 @@ def get_interface(submit_function, config: Interface_Config):
             # Music toggle.
             music_enabled = gr.Checkbox(
                 label=config.music_toggle_label,
-                value=not config.music_disabled,
+                value=False,  # not config.music_disabled, (Temporal, service is down)
                 interactive=not config.music_disabled)
             # Narration toggle.
             narration_enabled = gr.Checkbox(
