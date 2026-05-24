@@ -17,13 +17,19 @@ DEEPGRAM_API_KEY = os.getenv('DEEPGRAM_API_KEY', '')
 
 # Define globals.
 MODEL = "aura-2"
-VOICE = "jupiter"
 LANGUAGE = 'en'
 _logger.info(f'NARRATOR MODEL: {MODEL}')
-_logger.info(f'NARRATOR VOICE: {VOICE}')
-_logger.info(f'NARRATOR LANGUAGE: {LANGUAGE}')
 
-REQUEST_TEMPLATE = "{model}-{voice}-{language}"
+language_voice_map = {
+    "en": "jupiter-en",  # English
+    "es": "diana-es",    # Spanish
+    "de": "julius-de",   # German
+    "fr": "agathe-fr",   # French
+    "nl": "roman-nl",    # Dutch
+    "it": "livia-it",    # Italian
+}
+
+REQUEST_TEMPLATE = "{model}-{voice}"
 
 # Client instantiation.
 CLIENT = DeepgramClient(api_key=DEEPGRAM_API_KEY)
@@ -46,12 +52,12 @@ def create_wav_from_pcm(audio_data):
     return audio_file
 
 
-def narrate(prompt, client=CLIENT, model=MODEL, voice=VOICE, language=LANGUAGE):
+def narrate(prompt, client=CLIENT, model=MODEL, voice=None, language=LANGUAGE):
     """Generate audio content using Gemini's TTS capabilities."""
-    print(f'Generating audio for prompt: "{prompt}"')
+    voice = language_voice_map.get(language)
+    _logger.info(f'Generating audio for prompt: "{prompt}" ({voice=})')
     audio_content = client.speak.v1.audio.generate(
-        text=prompt, model=REQUEST_TEMPLATE.format(
-            model=model, voice=voice, language=language))
+        text=prompt, model=REQUEST_TEMPLATE.format(model=model, voice=voice))
     audio_file = create_wav_from_pcm(audio_content)
     return audio_file
 

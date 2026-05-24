@@ -9,8 +9,9 @@ from typing import Callable, NamedTuple, Optional
 class Gameplay_Config(NamedTuple):
     """Gradio interface configuration class."""
     draw_func: Callable
-    compose_func: Optional[Callable]
     weave_func: Callable
+    narrate_func: Optional[Callable]
+    compose_func: Optional[Callable]
     scene_style: str
     scene_prompt: str
     compose_style: str
@@ -27,8 +28,10 @@ class Gameplay_Config(NamedTuple):
 
 def get_gameplay_function(config: Gameplay_Config):
     """Return a pre-configured turn gameplay function."""
-    async def gameplay_function(message, history, music_enabled):
+    async def gameplay_function(message, history, music_enabled,
+                                narration_enabled, language):
         """Generate Game Master's response and draw the scene image."""
+        # RETURNS: scene, ambience, narration, response, history, input
         # Request weaving.
         _logger.info(f'WEAVING SCENE...')
         try:
@@ -37,12 +40,12 @@ def get_gameplay_function(config: Gameplay_Config):
             scene = config.error_img
             response = config.error_weaver.format(ex=ex)
             _logger.error(f'ERROR WEAVING SCENE: {ex}\n{message}\n{history}')
-            return scene, None, response, history, message
+            return scene, None, None, response, history, message
         # Update history.
         history.append({"role": "user", "content": message})
         history.append({"role": "assistant", "content": response.model_dump_json()})
 
-        # Prepare drawing task
+        # Prepare drawing task.
         async def draw_scene():
             if not config.draw_func:
                 _logger.info(f'DRAWING DISABLED...')
@@ -53,14 +56,14 @@ def get_gameplay_function(config: Gameplay_Config):
                 scene_data = {'scene_description': response.scene_description,
                               'scene_style': config.scene_style}
                 scene_prompt = config.scene_prompt.format(**scene_data)
-                _logger.info(f'PROMPT BODY IS: \n\n{scene_prompt}\n')
-                _logger.info(f'PROMPT LENGTH IS: {len(scene_prompt)}')
+                _logger.info(f'DRAW PROMPT LENGTH IS: {len(scene_prompt)}')
+                _logger.info(f'DRAW PROMPT BODY IS: \n\n{scene_prompt}\n')
                 return await asyncio.to_thread(config.draw_func, scene_prompt)
             except Exception as ex:
                 _logger.warning(f'ERROR DRAWING SCENE: {ex}')
                 raise
 
-        # Prepare composing task
+        # Prepare composing task.
         async def compose_scene():
             if not config.compose_func or not music_enabled:
                 _logger.info(f'COMPOSING DISABLED...')
@@ -71,23 +74,44 @@ def get_gameplay_function(config: Gameplay_Config):
                 compose_data = {'scene_description': response.scene_description,
                                 'compose_style': config.compose_style}
                 compose_prompt = config.compose_prompt.format(**compose_data)
-                _logger.info(f'COMPOSE PROMPT BODY IS: \n\n{compose_prompt}\n')
                 _logger.info(f'COMPOSE PROMPT LENGTH IS: {len(compose_prompt)}')
+                _logger.info(f'COMPOSE PROMPT BODY IS: \n\n{compose_prompt}\n')
                 return await asyncio.to_thread(config.compose_func, compose_prompt)
             except Exception as ex:
                 _logger.warning(f'ERROR COMPOSING SCENE: {ex}')
                 return None
 
-        # Run both tasks concurrently
+        # Prepare narration task.
+        async def narrate_scene():
+            if not config.narrate_func or not narration_enabled:
+                _logger.info(f'NARRATION DISABLED...')
+                return None
+
+            _logger.info(f'NARRATING SCENE...')
+            try:
+                narrate_prompt = response.scene_description
+                _logger.info(f'NARRATE LANGUAGE IS: {language}')
+                _logger.info(f'NARRATE PROMPT LENGTH IS: {len(narrate_prompt)}')
+                _logger.info(f'NARRATE PROMPT BODY IS: \n\n{narrate_prompt}\n')
+                audio = await asyncio.to_thread(config.narrate_func, narrate_prompt,
+                                                language=language)
+                audio.seek(0)
+                return audio.read()
+            except Exception as ex:
+                _logger.warning(f'ERROR NARRATING SCENE: {ex}')
+                return None
+
+        # Run all tasks concurrently
         try:
-            scene, ambience = await asyncio.gather(draw_scene(), compose_scene())
+            scene, ambience, narration = await asyncio.gather(
+                draw_scene(), compose_scene(), narrate_scene())
         except Exception as ex:
             scene = config.error_img
             response = config.error_illustrator.format(ex=ex)
             _logger.error(f'ERROR IN SCENE OPERATIONS: {ex}')
-            return scene, None, response, history, ''
-
-        return scene, ambience, response, history, ''
+            return scene, None, None, response, history, ''
+        _logger.info(f'ALL SCENE OPERATIONS COMPLETED.')
+        return scene, ambience, narration, response, history, ''
     return gameplay_function
 
 

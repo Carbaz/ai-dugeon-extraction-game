@@ -10,6 +10,7 @@ from .composer import compose_pixazo
 from .gameplay import Gameplay_Config
 from .illustrator import draw_functions
 from .interface import Interface_Config
+from .narrator import narrate_deepgram, narrate_gemini
 from .storyweaver import set_description_limit, weave
 
 
@@ -26,6 +27,12 @@ if os.getenv('MUSIC_GENERATION', 'true').lower() in ['true', '1', 'yes']:
 else:
     COMPOSE_FUNCTION = None
 
+# Check env if Narration generation is enabled.
+if os.getenv('NARRATION_GENERATION', 'true').lower() in ['true', '1', 'yes']:
+    NARRATE_FUNCTION = narrate_deepgram
+else:
+    NARRATE_FUNCTION = None
+
 # Set Storyweaver description limit based on prompts configuration.
 set_description_limit(prompts.STORYWEAVER_LIMIT)
 
@@ -40,9 +47,10 @@ FOOTER_DISCLAIMER = """
 
 # Configure the game.
 GAME_CONFIG = Gameplay_Config(
+    weave_func=weave,
     draw_func=DRAW_FUNCTION,
     compose_func=COMPOSE_FUNCTION,
-    weave_func=weave,
+    narrate_func=narrate_deepgram,
     scene_style=prompts.SCENE_STYLE,
     scene_prompt=prompts.SCENE_PROMPT,
     compose_style=prompts.COMPOSE_STYLE,
@@ -58,6 +66,7 @@ GAME_CONFIG = Gameplay_Config(
 UI_CONFIG = Interface_Config(
     start_img='images/chair.jpg',
     start_ambience='audios/intro_ambience_quiet.mp3',
+    start_narration='audios/intro_narration.wav',
     place_img='images/machine.jpg',
     description_label='Cognitive Projection',
     title_label='The Neural Nexus',
@@ -67,7 +76,11 @@ UI_CONFIG = Interface_Config(
     music_toggle_label=('Generate Music (Disable for faster generation)'
                         if COMPOSE_FUNCTION
                         else 'Music Generation disabled on server'),
+    narration_toggle_label=('Generate Narration (Disable for faster generation)'
+                        if NARRATE_FUNCTION
+                        else 'Narration Generation disabled on server'),
     music_disabled=not bool(COMPOSE_FUNCTION),
+    narration_disabled=not bool(NARRATE_FUNCTION),
     game_over_field='Game Over',
     game_over_label='Disengage Neural Links',
     footer_disclaimer=FOOTER_DISCLAIMER,

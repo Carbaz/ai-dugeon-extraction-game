@@ -52,7 +52,7 @@ def create_wav_from_pcm(audio_content, channels=1, sample_width=2, rate=24000):
     return audio_file
 
 
-def narrate(prompt, client=CLIENT, model=MODEL, voice=VOICE):
+def narrate(prompt, client=CLIENT, model=MODEL, voice=VOICE, language=None):
     """Generate audio content using Gemini's TTS capabilities."""
     print(f'Generating audio for prompt: "{prompt}"')
     response = client.models.generate_content(
