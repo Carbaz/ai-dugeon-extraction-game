@@ -18,8 +18,10 @@ MODEL = "magic"  # By: MagicStudio
 # MODEL = "wan"  # By: Qwen.ai
 # MODEL = "turbo"  # By: MitraAi
 # MODEL = "flux"  # By: MitraAi
+# MODEL = "flux-pro"  # By: MitraAi
 # MODEL = "flux-schnell"  # By: MitraAi
 _logger.info(f'ILLUSTRATOR MODEL: {MODEL}')
+# print(f"ILLUSTRATOR MODEL: {MODEL}")
 
 HEADERS = {"Content-Type": "application/json", "Cache-Control": "no-cache"}
 
@@ -34,17 +36,22 @@ def handle_stream(response):
             # Handle different statuses.
             if "imageUrl" in message:
                 _logger.info(f"Image URL: {message['imageUrl']}")
+                # print(f"Image URL: {message['imageUrl']}")
                 return message["imageUrl"]
             elif message.get("status") == "processing":
                 _logger.info(f"... {message.get('message')}")
+                # print(f"... {message.get('message')}")
             elif message.get("status") == "error":
                 _logger.info(f"Error: {message.get('message')}")
+                # print(f"Error: {message.get('message')}")
                 raise Exception(f"Error: {message.get('message')}")
             elif message.get("status") == "complete":
                 _logger.info("Complete but no image")
+                # print("Complete but no image")
                 raise ValueError("No image URL found in the response.")
             else:
                 _logger.info(f"Unknown line: {message}")
+                # print(f"Unknown line: {message}")
     raise ValueError("No image URL found in the response.")
 
 
