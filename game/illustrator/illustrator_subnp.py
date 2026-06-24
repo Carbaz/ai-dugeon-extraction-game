@@ -10,15 +10,13 @@ from .tools import fetch_image
 # Instantiate logger.
 _logger = getLogger(__name__)
 
-SUBNP_API_URL = "https://t2i.mcpcore.xyz/generate"
-SUBNP_API_URL = "https://subnp.com/api/free/generate"  # Probably wrapping the other.
+SUBNP_API_URL = "https://subnp.com/api/free/generate"
 
 # Choose model to use, comment out the others:
 MODEL = "magic"  # By: MagicStudio
 # MODEL = "wan"  # By: Qwen.ai
 # MODEL = "turbo"  # By: MitraAi
 # MODEL = "flux"  # By: MitraAi
-# MODEL = "flux-pro"  # By: MitraAi
 # MODEL = "flux-schnell"  # By: MitraAi
 _logger.info(f'ILLUSTRATOR MODEL: {MODEL}')
 # print(f"ILLUSTRATOR MODEL: {MODEL}")
@@ -33,6 +31,7 @@ def handle_stream(response):
             # Remove the 'data: ' prefix.
             line = line.replace("data: ", "", 1)
             message = loads(line)
+            # print(f"Received message: {message}")
             # Handle different statuses.
             if "imageUrl" in message:
                 _logger.info(f"Image URL: {message['imageUrl']}")
